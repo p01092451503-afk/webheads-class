@@ -341,15 +341,12 @@ const AdminPoints = () => {
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="min-w-0">
                   <Label className="text-xs">회원</Label>
-                  <Select value={manual.user_id} onValueChange={(v) => setManual({ ...manual, user_id: v })}>
-                    <SelectTrigger><SelectValue placeholder="선택" /></SelectTrigger>
-                    <SelectContent>
-                      {members.map((m) => (
-                        <SelectItem key={m.user_id} value={m.user_id}>{m.full_name || m.email}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <MemberCombobox
+                    value={manual.user_id}
+                    onChange={(id) => setManual({ ...manual, user_id: id })}
+                  />
                 </div>
+
                 <div className="min-w-0">
                   <Label className="text-xs">구분</Label>
                   <Select value={manual.mode} onValueChange={(v) => setManual({ ...manual, mode: v })}>
