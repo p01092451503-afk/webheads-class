@@ -5,10 +5,10 @@
 
 @layer base {
   :root {
-    --background: 40 20% 98%;
+    --background: 0 0% 100%;
     --foreground: 30 10% 12%;
 
-    --card: 40 25% 97%;
+    --card: 0 0% 100%;
     --card-foreground: 30 10% 12%;
 
     --popover: 0 0% 100%;
@@ -35,7 +35,7 @@
 
     --radius: 0.75rem;
 
-    --sidebar-background: 40 20% 97%;
+    --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 30 10% 25%;
     --sidebar-primary: 30 10% 12%;
     --sidebar-primary-foreground: 40 20% 97%;
@@ -45,7 +45,7 @@
     --sidebar-ring: 30 10% 30%;
 
     /* Custom tokens */
-    --warm-50: 40 25% 97%;
+    --warm-50: 0 0% 100%;
     --warm-100: 35 20% 94%;
     --warm-200: 33 18% 88%;
     --warm-300: 30 16% 75%;
