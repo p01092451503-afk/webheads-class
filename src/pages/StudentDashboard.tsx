@@ -850,40 +850,32 @@ const StudentDashboard = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* 학습 통계 */}
-          <div className="stat-card !p-6 space-y-5">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" aria-hidden="true" /> {t("dashboard.learningStats")}
-            </h2>
-            <div className="space-y-5">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{t("dashboard.weeklyGoal")}</span>
-                  <span className="font-semibold text-foreground">
-                    {gamification?.experience_points ? Math.round(gamification.experience_points / 60) : 0}h / 20h
-                  </span>
-                </div>
-                <Progress
-                  value={Math.min(100, ((gamification?.experience_points ? gamification.experience_points / 60 : 0) / 20) * 100)}
-                  className="h-3"
-                  aria-label={`${t("dashboard.weeklyGoal")}: ${gamification?.experience_points ? Math.round(gamification.experience_points / 60) : 0}h / 20h`}
-                />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{t("dashboard.assignmentCompletionRate")}</span>
-                  <span className="font-semibold text-foreground">{assignmentCompletionRate}%</span>
-                </div>
-                <Progress value={assignmentCompletionRate} className="h-3" aria-label={`${t("dashboard.assignmentCompletionRate")}: ${assignmentCompletionRate}%`} />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{t("dashboard.averageScore")}</span>
-                  <span className="font-semibold text-foreground">{enrollmentStats?.avgProgress || 0}{t("common.points")}</span>
-                </div>
-                <Progress value={enrollmentStats?.avgProgress || 0} className="h-3" aria-label={`${t("dashboard.averageScore")}: ${enrollmentStats?.avgProgress || 0}${t("common.points")}`} />
-              </div>
-            </div>
-          </div>
+          <JcCard>
+            <CardHeader
+              title={
+                <span className="inline-flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" aria-hidden="true" /> {t("dashboard.learningStats")}
+                </span>
+              }
+            />
+            <CardBody className="space-y-5">
+              <ProgressBar
+                label={`${t("dashboard.weeklyGoal")} · ${gamification?.experience_points ? Math.round(gamification.experience_points / 60) : 0}h / 20h`}
+                value={Math.min(100, ((gamification?.experience_points ? gamification.experience_points / 60 : 0) / 20) * 100)}
+              />
+              <ProgressBar
+                label={t("dashboard.assignmentCompletionRate")}
+                value={assignmentCompletionRate}
+                tone="accent"
+              />
+              <ProgressBar
+                label={t("dashboard.averageScore")}
+                value={enrollmentStats?.avgProgress || 0}
+                tone="success"
+              />
+            </CardBody>
+          </JcCard>
+
 
           {/* 추천 강의 */}
           <JcCard>
