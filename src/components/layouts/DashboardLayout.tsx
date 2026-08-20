@@ -286,6 +286,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     { navKey: "admin.microLearning", label: t("nav.microLearning", "마이크로러닝"), href: "/admin/micro-learning", icon: Zap },
     { navKey: "admin.offlineClasses", label: t("nav.offlineClasses", "집합강의·연수"), href: "/admin/offline-classes", icon: CalendarDays },
     { navKey: "admin.designManager", label: t("nav.designManager", "디자인 관리"), href: "/admin/design-manager", icon: LayoutTemplate },
+    { navKey: "admin.banners", label: t("nav.banners", "배너 관리"), href: "/admin/banners", icon: ImageIcon },
     { navKey: "admin.qualifications", label: t("nav.qualifications", "자격검정 관리"), href: "/admin/qualifications", icon: Award },
     { navKey: "admin.instructors", label: t("nav.instructorManagement", "강사 관리"), href: "/admin/instructors", icon: UserCog },
     { navKey: "admin.tracks", label: t("nav.trackManagement", "학습 트랙 관리"), href: "/admin/tracks", icon: Layers },
@@ -420,6 +421,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
       icon: Palette,
       items: [
         { navKey: "admin.designManager", label: t("nav.designManager", "디자인 관리"), href: "/admin/design-manager", icon: LayoutTemplate },
+        { navKey: "admin.banners", label: t("nav.banners", "배너 관리"), href: "/admin/banners", icon: ImageIcon },
         { navKey: "admin.siteSettings", label: t("nav.siteSettings", "사이트 설정"), href: "/admin/site-settings", icon: Palette },
       ],
     },
