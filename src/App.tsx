@@ -150,6 +150,7 @@ const StudentCertificates = lazy(() => import("./pages/student/StudentCertificat
 const StudentEvidence = lazy(() => import("./pages/student/StudentEvidence"));
 const StudentSurveys = lazy(() => import("./pages/student/StudentSurveys"));
 const VerifyCertificate = lazy(() => import("./pages/public/VerifyCertificate"));
+const StaticPage = lazy(() => import("./pages/public/StaticPage"));
 
 // Video Sessions
 const VideoSessionsManage = lazy(() => import("./pages/video/VideoSessionsManage"));
@@ -267,6 +268,7 @@ const App = () => (
               <Route path="/student/evidence" element={<ProtectedRoute><FeatureGate module="evidence"><StudentEvidence /></FeatureGate></ProtectedRoute>} />
               <Route path="/student/surveys" element={<ProtectedRoute><FeatureGate module="surveys_ops"><StudentSurveys /></FeatureGate></ProtectedRoute>} />
               <Route path="/verify/cert/:code" element={<VerifyCertificate />} />
+              <Route path="/p/:slug" element={<StaticPage />} />
 
               {/* AI tools (all authenticated users) */}
               <Route path="/tools/english-correction" element={<ProtectedRoute><EnglishCorrection /></ProtectedRoute>} />

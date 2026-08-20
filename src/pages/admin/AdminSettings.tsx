@@ -296,7 +296,9 @@ const AdminSettings = () => {
           label: t("nav.groupSite", "사이트·디자인"),
           items: [
             { key: "admin.designManager", label: t("nav.designManager", "디자인 관리") },
+            { key: "admin.banners", label: t("nav.banners", "배너 관리") },
             { key: "admin.siteSettings", label: t("nav.siteSettings", "사이트 설정") },
+
           ],
         },
         {

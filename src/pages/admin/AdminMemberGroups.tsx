@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import MemberCombobox from "@/components/admin/MemberCombobox";
 import { supabase } from "@/integrations/supabase/client";
 
 /** 회원 그룹 / 회원 등급 / 강의별 그룹·등급 할인 관리 */
@@ -20,7 +21,8 @@ const AdminMemberGroups = () => {
   const [groupForm, setGroupForm] = useState({ name: "", code: "", discount_percent: "0" });
   const [gradeForm, setGradeForm] = useState({ name: "", code: "", rank: "0", discount_percent: "0" });
   const [discForm, setDiscForm] = useState({ course_id: "", target_type: "group", ref_id: "", discount_type: "percent", discount_value: "0" });
-  const [memberEmail, setMemberEmail] = useState("");
+  // 이메일 정확 입력 대신 검색형 선택으로 대량 회원 배정을 지원한다.
+  const [memberUserId, setMemberUserId] = useState("");
   const [memberGroupId, setMemberGroupId] = useState("");
 
   const { data: groups = [] } = useQuery({
@@ -126,13 +128,12 @@ const AdminMemberGroups = () => {
   const addMember = () =>
     run(async () => {
       if (!memberGroupId) throw new Error("그룹을 먼저 선택하세요.");
-      const { data: p, error: e0 } = await supabase
-        .from("profiles").select("user_id").eq("email", memberEmail.trim()).maybeSingle();
-      if (e0) throw e0;
-      if (!p) throw new Error("해당 이메일의 회원을 찾을 수 없습니다.");
-      const { error } = await supabase.from("member_group_members").insert({ group_id: memberGroupId, user_id: p.user_id });
+      if (!memberUserId) throw new Error("추가할 회원을 선택하세요.");
+      const { error } = await supabase
+        .from("member_group_members")
+        .insert({ group_id: memberGroupId, user_id: memberUserId });
       if (error) throw error;
-      setMemberEmail("");
+      setMemberUserId("");
     }, "회원이 그룹에 추가되었습니다.", ["member-group-members"]);
 
   const del = (table: "member_groups" | "member_grades" | "course_discounts" | "member_group_members", id: string, key: string) =>
@@ -199,8 +200,14 @@ const AdminMemberGroups = () => {
               <div className="space-y-3">
                 <h2 className="text-sm font-semibold">그룹 소속 회원</h2>
                 <div className="flex gap-2 max-w-md">
-                  <Input value={memberEmail} onChange={(e) => setMemberEmail(e.target.value)} placeholder="추가할 회원 이메일" />
-                  <Button onClick={addMember}>추가</Button>
+                  <div className="flex-1 min-w-0">
+                    <MemberCombobox
+                      value={memberUserId}
+                      onChange={(id) => setMemberUserId(id)}
+                      excludeIds={members.map((m: any) => m.user_id)}
+                    />
+                  </div>
+                  <Button onClick={addMember} disabled={!memberUserId}>추가</Button>
                 </div>
                 <div className="border rounded-xl divide-y">
                   {members.map((m) => (
