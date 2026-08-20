@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense } from "react";
-import { Settings, Bell, Shield, Building2, Plus, Pencil, Trash2, Palette, Users as UsersIcon, ToggleRight, CreditCard, EyeOff } from "lucide-react";
+import { Settings, Bell, Shield, Building2, Plus, Pencil, Trash2, Palette, Users as UsersIcon, ToggleRight, CreditCard, EyeOff, Folder } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -720,37 +720,43 @@ const AdminSettings = () => {
                     </p>
                   </div>
                 </div>
-                <div className="space-y-6">
+                <div className="space-y-8">
                   {NAV_REGISTRY.map((group) => {
                     const allItems = group.categories.flatMap((c) => c.items);
                     const hiddenCount = allItems.filter((i) => hiddenNavKeys.includes(i.key)).length;
                     return (
-                      <div key={group.role} className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            {group.roleLabel}
-                          </h3>
-                          <span className="text-[11px] text-muted-foreground">
+                      <div key={group.role} className="space-y-0">
+                        <div className="flex items-center justify-between gap-3 rounded-lg bg-accent/60 px-4 py-3">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Shield className="h-4 w-4 text-primary" aria-hidden="true" />
+                            <h3 className="text-sm font-semibold text-primary truncate">
+                              {group.roleLabel}
+                            </h3>
+                          </div>
+                          <span className="text-[11px] font-medium text-muted-foreground bg-background/80 rounded-full px-2.5 py-1 whitespace-nowrap">
                             {hiddenCount}/{allItems.length} {t("admin.menuVisibilityHidden", "숨김")}
                           </span>
                         </div>
-                        <Accordion type="multiple" className="rounded-lg border border-border divide-y-2 divide-border/80">
+                        <Accordion type="multiple" className="divide-y-2 divide-border/80 border-b-2 border-border/80">
                          {group.categories.map((category) => {
                             const catHidden = category.items.filter((i) => hiddenNavKeys.includes(i.key)).length;
                             const allHidden = catHidden === category.items.length && category.items.length > 0;
                             return (
                               <AccordionItem key={category.id} value={category.id} className="border-0">
-                                <AccordionTrigger className="px-4 py-3 hover:no-underline">
+                                <AccordionTrigger className="px-4 py-4 hover:no-underline hover:bg-accent/20">
                                   <div className="flex items-center justify-between flex-1 gap-3 min-w-0">
-                                    <span className={`text-sm font-medium truncate ${allHidden ? "text-muted-foreground line-through" : "text-foreground"}`}>
-                                      {category.label}
+                                    <span className="flex items-center gap-2.5 min-w-0">
+                                      <Folder className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                                      <span className={`text-[15px] font-semibold truncate ${allHidden ? "text-muted-foreground line-through" : "text-foreground"}`}>
+                                        {category.label}
+                                      </span>
                                       {allHidden && (
-                                        <span className="ml-2 text-[10px] font-normal not-italic no-underline text-muted-foreground">
+                                        <span className="text-[10px] font-normal not-italic no-underline text-muted-foreground whitespace-nowrap">
                                           ({t("admin.categoryHiddenNote", "사이드바에서 분류 자체 숨김")})
                                         </span>
                                       )}
                                     </span>
-                                    <span className="text-[11px] text-muted-foreground whitespace-nowrap">
+                                    <span className="text-[11px] font-medium text-muted-foreground bg-accent/60 rounded-full px-2.5 py-1 whitespace-nowrap">
                                       {catHidden}/{category.items.length} {t("admin.menuVisibilityHidden", "숨김")}
                                     </span>
                                   </div>
@@ -762,7 +768,7 @@ const AdminSettings = () => {
                                       return (
                                         <div
                                           key={item.key}
-                                          className="flex items-center justify-between px-4 py-2.5 bg-muted/20"
+                                          className="flex items-center justify-between gap-3 pl-11 pr-4 py-3.5 hover:bg-accent/20 transition-colors"
                                         >
                                           <span
                                             className={`text-sm ${
@@ -771,8 +777,8 @@ const AdminSettings = () => {
                                           >
                                             {item.label}
                                           </span>
-                                          <div className="flex items-center gap-2">
-                                            <span className="text-[11px] text-muted-foreground w-10 text-right">
+                                          <div className="flex items-center gap-3">
+                                            <span className="text-[11px] text-muted-foreground w-8 text-right">
                                               {hidden
                                                 ? t("admin.menuVisibilityHidden", "숨김")
                                                 : t("admin.menuVisibilityShown", "표시")}
