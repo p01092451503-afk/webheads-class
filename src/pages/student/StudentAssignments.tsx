@@ -225,11 +225,12 @@ const StudentAssignments = () => {
                       </p>
                     )}
                   </div>
-                  <Button size="sm" variant="outline" className="rounded-xl text-xs shrink-0 gap-1.5" tabIndex={-1} aria-hidden="true">
+                  <JcButton size="sm" variant="outline" className="shrink-0 gap-1.5" tabIndex={-1} aria-hidden="true">
                     <Send className="h-3 w-3" /> {t("common.submit")}
-                  </Button>
+                  </JcButton>
                 </div>
-              </div>
+              </JcCard>
+
             ))}
           </div>
         )}
