@@ -442,6 +442,14 @@ const AdminSiteSettings = () => {
                   <Label className="text-xs">사업자 등록번호</Label>
                   <Input value={form.business_number || ""} onChange={(e) => update("business_number", e.target.value)} placeholder="000-00-00000" />
                 </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs">통신판매업 신고번호</Label>
+                  <Input value={form.mail_order_number || ""} onChange={(e) => update("mail_order_number", e.target.value)} placeholder="제 2026-서울강남-00000 호" />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs">우편번호</Label>
+                  <Input value={form.postal_code || ""} onChange={(e) => update("postal_code", e.target.value)} placeholder="06000" />
+                </div>
                 <div className="space-y-1.5 md:col-span-2">
                   <Label className="text-xs">주소</Label>
                   <Input value={form.company_address || ""} onChange={(e) => update("company_address", e.target.value)} placeholder="서울특별시 강남구 ..." />
@@ -451,9 +459,14 @@ const AdminSiteSettings = () => {
                   <Input value={form.company_phone || ""} onChange={(e) => update("company_phone", e.target.value)} placeholder="02-0000-0000" />
                 </div>
                 <div className="space-y-1.5">
+                  <Label className="text-xs">팩스 (FAX)</Label>
+                  <Input value={form.fax_number || ""} onChange={(e) => update("fax_number", e.target.value)} placeholder="02-0000-0001" />
+                </div>
+                <div className="space-y-1.5">
                   <Label className="text-xs">이메일</Label>
                   <Input value={form.company_email || ""} onChange={(e) => update("company_email", e.target.value)} placeholder="contact@example.com" />
                 </div>
+
                 <div className="space-y-1.5 md:col-span-2">
                   <Label className="text-xs">풋터 소개 문구</Label>
                   <Textarea value={form.footer_description || ""} onChange={(e) => update("footer_description", e.target.value)} placeholder="WEBHEADS는 ..." rows={2} />
