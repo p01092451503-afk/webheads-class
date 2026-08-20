@@ -645,7 +645,7 @@ const STUDENT_SECTIONS: ManualSection[] = [
       {
         title: "강의 찾기 · 신청 · 결제",
         summary: "카테고리와 검색으로 강의를 찾아 신청하거나 결제합니다.",
-        href: "/student/courses",
+        href: "/dashboard/courses",
         where: "좌측 메뉴 > 강의 찾기",
         steps: [
           "카테고리 탭을 클릭하거나 검색칸에 키워드를 입력합니다.",
@@ -675,7 +675,7 @@ const STUDENT_SECTIONS: ManualSection[] = [
       {
         title: "과제 제출",
         summary: "글과 파일(최대 5개, 각 10MB)을 제출합니다.",
-        href: "/student/assignments",
+        href: "/dashboard/assignments",
         where: "좌측 메뉴 > 과제",
         steps: [
           "과제 목록에서 제출할 과제를 클릭합니다.",
@@ -849,7 +849,7 @@ const TEACHER_SECTIONS: ManualSection[] = [
       {
         title: "첨삭하기 (그리기 도구 사용법)",
         summary: "학생이 제출한 글/이미지 위에 직접 선을 긋고 글씨를 써서 교정합니다.",
-        href: "/corrections",
+        href: "/student/corrections",
         where: "좌측 메뉴 > 첨삭 관리",
         ui: [
           "가운데: 학생 제출물 이미지(캔버스)",
