@@ -276,9 +276,9 @@ const StudentAssignments = () => {
                       )}
                     </div>
                     <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
+                  </div>
                 </JcCard>
 
-                </div>
               );
             })}
           </div>
