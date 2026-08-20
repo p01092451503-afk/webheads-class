@@ -62,7 +62,7 @@ export const SessionChatPanel = ({ sessionId }: { sessionId: string }) => {
 
   useEffect(() => {
     const channel = supabase
-      .channel(`video-session-messages:${sessionId}`)
+      .channel(`video-session-messages:${sessionId}:${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "video_session_messages", filter: `session_id=eq.${sessionId}` },
