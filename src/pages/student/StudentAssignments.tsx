@@ -13,6 +13,13 @@ import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import RichStatCard from "@/components/admin/stats/RichStatCard";
+import {
+  Button as JcButton,
+  Card as JcCard,
+  Textarea as JcTextarea,
+  PageHeader,
+} from "@/design-system/webheads-class";
+
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = [
