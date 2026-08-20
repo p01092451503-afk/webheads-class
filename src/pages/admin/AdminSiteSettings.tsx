@@ -26,7 +26,11 @@ const emptySettings: Partial<SiteSettings> = {
   company_phone: "",
   company_email: "",
   business_number: "",
+  mail_order_number: "",
+  fax_number: "",
+  postal_code: "",
   ceo_name: "",
+
   hours_weekday: "",
   hours_weekend: "",
   hours_lunch: "",
