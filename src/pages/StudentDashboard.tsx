@@ -514,16 +514,19 @@ const StudentDashboard = () => {
     <DashboardLayout role="student">
       <div className="space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-xl sm:text-2xl font-semibold text-foreground flex items-center gap-2">
-            <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6 text-primary" aria-hidden="true" />
-            {t("dashboard.learningDashboard")}
-          </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("dashboard.hello")}</p>
-        </div>
+        <PageHeader
+          title={
+            <span className="inline-flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6 text-primary" aria-hidden="true" />
+              {t("dashboard.learningDashboard")}
+            </span>
+          }
+          subtitle={t("dashboard.hello")}
+        />
 
         {/* Stat Cards — visualized 2 rows of 4 */}
         <section className="grid grid-cols-2 sm:grid-cols-4 gap-3" aria-label={t("dashboard.stats", "학습 통계")}>
+
           {richStats.map((stat) => {
             const Icon = stat.icon;
             const content = (
