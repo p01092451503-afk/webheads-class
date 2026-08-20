@@ -161,9 +161,15 @@ const StudentCourses = () => {
   return (
     <DashboardLayout role="student">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground flex items-center gap-2"><BookOpen className="h-6 w-6" aria-hidden="true" />{t("course.myCourseRoom")}</h1>
-        </div>
+        <PageHeader
+          title={
+            <span className="inline-flex items-center gap-2">
+              <BookOpen className="h-6 w-6" aria-hidden="true" />
+              {t("course.myCourseRoom")}
+            </span>
+          }
+        />
+
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
           <TabsList className="grid grid-cols-3 w-full max-w-3xl h-auto">
