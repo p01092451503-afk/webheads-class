@@ -50,12 +50,9 @@ export type { AnnouncementDetailProps, AnnouncementAction } from "./components/A
 
 export { cn } from "./lib/utils";
 
-export { DashboardLayout, DashboardNavGroup, DashboardNavItem } from "./components/DashboardLayout";
-export type {
-  DashboardLayoutProps,
-  DashboardNavGroupProps,
-  DashboardNavItemProps,
-} from "./components/DashboardLayout";
+// DashboardLayout은 이 프로젝트의 기존 레이아웃(@/components/layouts/DashboardLayout)을
+// 계속 사용하므로 디자인 시스템에서는 제외합니다.
+
 
 export { ThemeSwitch } from "./components/ThemeSwitch";
 export type { ThemeSwitchProps } from "./components/ThemeSwitch";
