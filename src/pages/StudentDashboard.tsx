@@ -17,6 +17,15 @@ import SelfLearningCard from "@/components/student/SelfLearningCard";
 import { lazy, Suspense } from "react";
 import { format as fmtDate, subDays } from "date-fns";
 import { useCourseI18n, useContentI18n } from "@/hooks/useI18nMaps";
+import {
+  Button as JcButton,
+  Card as JcCard,
+  CardHeader,
+  CardBody,
+  PageHeader,
+  ProgressBar,
+} from "@/design-system/webheads-class";
+
 const DashCharts = {
   Bar: lazy(() => import("@/components/charts/DashboardCharts").then(m => ({ default: m.SimpleBarChart }))),
   Donut: lazy(() => import("@/components/charts/DashboardCharts").then(m => ({ default: m.DonutChart }))),
