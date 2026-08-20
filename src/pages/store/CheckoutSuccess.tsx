@@ -43,11 +43,13 @@ const CheckoutSuccess = () => {
         if (data?.error) throw new Error(JSON.stringify(data.error));
 
         // Fetch order details for display
-        const { data: order } = await supabase
+        const { data: order, error: orderError } = await supabase
           .from("orders")
           .select("order_number, final_amount, order_items(courses(title))")
           .eq("id", internalOrderId)
-          .single();
+          .maybeSingle();
+
+        if (orderError) console.error("Failed to load order details:", orderError);
 
         if (order) {
           setOrderInfo({

@@ -65,7 +65,7 @@ export default function AdminOpsSurveysRoot() {
   const { data: programs = [] } = useQuery({
     queryKey: ["ops-programs-min"],
     queryFn: async () => {
-      const { data, error } = await (supabase as any).from("ops_programs").select("id, title").order("title");
+      const { data, error } = await (supabase as any).from("programs").select("id, title").order("title");
       if (error) throw error;
       return data || [];
     },

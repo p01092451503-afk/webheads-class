@@ -111,7 +111,7 @@ const StorefrontSubscriptions = () => {
                 이용 종료일 {new Date(mySub.current_period_end).toLocaleDateString("ko-KR")}
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={() => navigate("/student/orders")}>
+            <Button variant="outline" size="sm" onClick={() => navigate("/my/orders")}>
               구독 관리
             </Button>
           </div>

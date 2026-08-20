@@ -143,9 +143,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           .from("profiles")
           .select("*, branch:departments(country_code)")
           .eq("user_id", userId)
-          .single(),
+          .maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", userId),
       ]);
+
+      if (profileRes.error) {
+        console.error("Failed to load profile:", profileRes.error);
+      }
+      if (rolesRes.error) {
+        console.error("Failed to load roles:", rolesRes.error);
+      }
 
       if (profileRes.data) {
         setProfile(profileRes.data as UserProfile);
