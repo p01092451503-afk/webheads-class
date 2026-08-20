@@ -886,11 +886,10 @@ const StudentDashboard = () => {
           </div>
 
           {/* 추천 강의 */}
-          <div className="stat-card !p-6 space-y-5">
-            <div>
-              <h2 className="text-lg font-bold text-foreground">{t("dashboard.recommendedCourses")}</h2>
-              <p className="text-sm text-muted-foreground mt-0.5">{t("dashboard.recommendedDesc")}</p>
-            </div>
+          <JcCard>
+            <CardHeader title={t("dashboard.recommendedCourses")} />
+            <CardBody className="space-y-3">
+              <p className="text-sm text-muted-foreground">{t("dashboard.recommendedDesc")}</p>
             {recommendedCourses.length === 0 ? (
               <div className="text-center py-6">
                 <p className="text-sm text-muted-foreground">{t("dashboard.noRecommended")}</p>
@@ -898,7 +897,7 @@ const StudentDashboard = () => {
             ) : (
               <div className="space-y-3">
                 {recommendedCourses.map((course: any) => (
-                  <div key={course.id} className="stat-card !p-3 sm:!p-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4" role="article" aria-label={tRecTitle(course)}>
+                  <JcCard key={course.id} variant="flat" className="!p-3 sm:!p-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4" role="article" aria-label={tRecTitle(course)}>
                     <div className="min-w-0 flex-1 space-y-1">
                       <h3 className="text-sm font-semibold text-foreground truncate">{tRecTitle(course)}</h3>
                       <p className="text-xs text-muted-foreground">{recInstructorMap.get(course.instructor_id) || t("dashboard.instructor")}</p>
@@ -907,19 +906,21 @@ const StudentDashboard = () => {
                         <span>{(recEnrollCountMap.get(course.id) || 0).toLocaleString()} {t("dashboard.students")}</span>
                       </div>
                     </div>
-                    <Button
+                    <JcButton
                       size="sm"
-                      className="shrink-0 rounded-full w-full sm:w-auto"
+                      className="shrink-0 w-full sm:w-auto"
                       onClick={() => navigate(`/student/courses/${course.id}?view=learn`)}
                       aria-label={`${tRecTitle(course)} - ${t("common.details")}`}
                     >
                       {t("common.details")}
-                    </Button>
-                  </div>
+                    </JcButton>
+                  </JcCard>
                 ))}
               </div>
             )}
-          </div>
+            </CardBody>
+          </JcCard>
+
         </div>
       </div>
     </DashboardLayout>
