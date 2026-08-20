@@ -68,7 +68,8 @@ Deno.serve(async (req) => {
 
     const BUNNY_API_KEY = Deno.env.get("BUNNY_STREAM_API_KEY");
     const BUNNY_LIBRARY_ID = Deno.env.get("BUNNY_STREAM_LIBRARY_ID");
-    const BUNNY_PULL_ZONE = Deno.env.get("BUNNY_STREAM_PULL_ZONE") || "";
+    const BUNNY_PULL_ZONE = Deno.env.get("BUNNY_STREAM_PULL_ZONE") ||
+      Deno.env.get("BUNNY_STREAM_CDN_HOSTNAME") || "";
     if (!BUNNY_API_KEY || !BUNNY_LIBRARY_ID) {
       return new Response(
         JSON.stringify({ error: "Bunny Stream secrets not configured" }),

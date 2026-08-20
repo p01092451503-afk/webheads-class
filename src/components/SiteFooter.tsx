@@ -53,17 +53,27 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                 <p><span className="text-xs text-muted-foreground/50 mr-1">대표</span>{s.ceo_name}</p>
               )}
               {s?.company_address && (
-                <p><span className="text-xs text-muted-foreground/50 mr-1">주소</span>{s.company_address}</p>
+                <p>
+                  <span className="text-xs text-muted-foreground/50 mr-1">주소</span>
+                  {s.postal_code ? `(${s.postal_code}) ` : ""}{s.company_address}
+                </p>
               )}
               {s?.business_number && (
                 <p><span className="text-xs text-muted-foreground/50 mr-1">사업자등록번호</span>{s.business_number}</p>
               )}
+              {s?.mail_order_number && (
+                <p><span className="text-xs text-muted-foreground/50 mr-1">통신판매업신고번호</span>{s.mail_order_number}</p>
+              )}
               {s?.company_phone && (
                 <p><span className="text-xs text-muted-foreground/50 mr-1">전화</span>{s.company_phone}</p>
+              )}
+              {s?.fax_number && (
+                <p><span className="text-xs text-muted-foreground/50 mr-1">팩스</span>{s.fax_number}</p>
               )}
               {s?.company_email && (
                 <p><span className="text-xs text-muted-foreground/50 mr-1">이메일</span>{s.company_email}</p>
               )}
+
             </div>
 
             {/* Footer nav links */}

@@ -23,6 +23,8 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
   const { user } = useUser();
   const [dateFilter, setDateFilter] = useState(new Date().toISOString().slice(0, 10));
   const [searchName, setSearchName] = useState("");
+  // 특정 날짜를 몰라도 이름만으로 조회할 수 있도록 "전체 기간" 모드를 제공한다.
+  const [allPeriod, setAllPeriod] = useState(false);
 
   const isTeacher = role === "teacher";
   const isKo = !i18n.language?.startsWith("en");
@@ -39,16 +41,13 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
 
   // Fetch sessions for the selected date
   const { data: sessions = [] } = useQuery({
-    queryKey: ["user-sessions", dateFilter],
+    queryKey: ["user-sessions", allPeriod ? "all" : dateFilter],
     queryFn: async () => {
       const startOfDay = `${dateFilter}T00:00:00.000Z`;
       const endOfDay = `${dateFilter}T23:59:59.999Z`;
-      const { data, error } = await supabase
-        .from("user_sessions")
-        .select("*")
-        .gte("login_at", startOfDay)
-        .lte("login_at", endOfDay)
-        .order("login_at", { ascending: true });
+      let q = supabase.from("user_sessions").select("*");
+      if (!allPeriod) q = q.gte("login_at", startOfDay).lte("login_at", endOfDay);
+      const { data, error } = await q.order("login_at", { ascending: false }).limit(5000);
       if (error) throw error;
       return data;
     },
@@ -56,15 +55,19 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
 
   // Fetch content_progress completed on this date for learning stats
   const { data: dailyProgress = [] } = useQuery({
-    queryKey: ["daily-progress", dateFilter],
+    queryKey: ["daily-progress", allPeriod ? "all" : dateFilter],
     queryFn: async () => {
       const startOfDay = `${dateFilter}T00:00:00.000Z`;
       const endOfDay = `${dateFilter}T23:59:59.999Z`;
-      const { data, error } = await supabase
+      let q = supabase
         .from("content_progress")
-        .select("user_id, completed, completed_at, last_accessed_at, progress_percentage, content_id")
-        .or(`completed_at.gte.${startOfDay},last_accessed_at.gte.${startOfDay}`)
-        .or(`completed_at.lte.${endOfDay},last_accessed_at.lte.${endOfDay}`);
+        .select("user_id, completed, completed_at, last_accessed_at, progress_percentage, content_id");
+      if (!allPeriod) {
+        q = q
+          .or(`completed_at.gte.${startOfDay},last_accessed_at.gte.${startOfDay}`)
+          .or(`completed_at.lte.${endOfDay},last_accessed_at.lte.${endOfDay}`);
+      }
+      const { data, error } = await q.limit(5000);
       if (error) throw error;
       return data || [];
     },
@@ -292,8 +295,17 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
             type="date"
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="w-full sm:w-44 h-10 rounded-xl"
+            disabled={allPeriod}
+            className="w-full sm:w-44 h-10 rounded-xl disabled:opacity-50"
           />
+          <Button
+            type="button"
+            variant={allPeriod ? "default" : "outline"}
+            onClick={() => setAllPeriod((v) => !v)}
+            className="h-10 rounded-xl whitespace-nowrap"
+          >
+            {isKo ? "전체 기간" : "All period"}
+          </Button>
           <Input
             placeholder={isKo ? "이름 검색..." : "Search name..."}
             value={searchName}

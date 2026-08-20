@@ -756,7 +756,7 @@ export default function AIQuestionGenerator({
             </DialogDescription>
           </DialogHeader>
 
-          <ScrollArea className="flex-1 pr-3 -mr-3">
+          <ScrollArea className="flex-1 min-h-0 overflow-y-auto pr-3 -mr-3">
             <div className="space-y-6">
               {/* SOURCE */}
               <div className="space-y-2">

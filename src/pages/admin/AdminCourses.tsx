@@ -205,13 +205,21 @@ const AdminCourses = () => {
       return matchSearch && matchStatus && matchCategory && matchTrack && matchStandalone;
     })
     .sort((a: any, b: any) => {
+      // 등록일이 동일한 데이터가 많아 정렬 결과가 같아 보이던 문제를 막기 위해
+      // 등록일 → 수정일 → 제목 순으로 2·3차 정렬 기준을 적용한다.
+      const ts = (v: any) => (v ? new Date(v).getTime() : 0);
+      const byDate = (x: any, y: any) =>
+        ts(x.created_at) - ts(y.created_at) ||
+        ts(x.updated_at) - ts(y.updated_at) ||
+        String(x.title || "").localeCompare(String(y.title || ""), "ko");
       switch (sortBy) {
-        case "oldest": return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        case "oldest": return byDate(a, b);
         case "title": return a.title.localeCompare(b.title);
         case "students": return ((enrollmentCounts as any)[b.id] || 0) - ((enrollmentCounts as any)[a.id] || 0);
-        default: return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        default: return byDate(b, a);
       }
     });
+
 
   // 머리글 클릭 정렬(선택 상자 정렬보다 우선) + 페이지 나눔
   const { sort, toggleSort } = useTableSort({ defaultKey: null, defaultDir: "asc" });

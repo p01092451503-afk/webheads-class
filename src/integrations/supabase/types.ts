@@ -7309,6 +7309,7 @@ export type Database = {
           created_at: string
           default_language: string | null
           facebook_url: string | null
+          fax_number: string | null
           footer_description: string | null
           footer_logo_url: string | null
           header_logo_url: string | null
@@ -7319,11 +7320,13 @@ export type Database = {
           hours_weekend: string | null
           id: string
           instagram_url: string | null
+          mail_order_number: string | null
           min_password_length: number | null
           notify_assignment_submit: boolean | null
           notify_completion: boolean | null
           notify_new_signup: boolean | null
           platform_name: string | null
+          postal_code: string | null
           privacy_policy: string | null
           pwa_app_name: string | null
           pwa_apple_icon_url: string | null
@@ -7355,6 +7358,7 @@ export type Database = {
           created_at?: string
           default_language?: string | null
           facebook_url?: string | null
+          fax_number?: string | null
           footer_description?: string | null
           footer_logo_url?: string | null
           header_logo_url?: string | null
@@ -7365,11 +7369,13 @@ export type Database = {
           hours_weekend?: string | null
           id?: string
           instagram_url?: string | null
+          mail_order_number?: string | null
           min_password_length?: number | null
           notify_assignment_submit?: boolean | null
           notify_completion?: boolean | null
           notify_new_signup?: boolean | null
           platform_name?: string | null
+          postal_code?: string | null
           privacy_policy?: string | null
           pwa_app_name?: string | null
           pwa_apple_icon_url?: string | null
@@ -7401,6 +7407,7 @@ export type Database = {
           created_at?: string
           default_language?: string | null
           facebook_url?: string | null
+          fax_number?: string | null
           footer_description?: string | null
           footer_logo_url?: string | null
           header_logo_url?: string | null
@@ -7411,11 +7418,13 @@ export type Database = {
           hours_weekend?: string | null
           id?: string
           instagram_url?: string | null
+          mail_order_number?: string | null
           min_password_length?: number | null
           notify_assignment_submit?: boolean | null
           notify_completion?: boolean | null
           notify_new_signup?: boolean | null
           platform_name?: string | null
+          postal_code?: string | null
           privacy_policy?: string | null
           pwa_app_name?: string | null
           pwa_apple_icon_url?: string | null
