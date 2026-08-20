@@ -420,7 +420,29 @@ export default function AdminQuestionBank() {
 
             {isChoice && (
               <div className="space-y-2">
-                <Label>{isEn ? "Options" : "보기"}</Label>
+                <div className="flex items-center justify-between">
+                  <Label>
+                    {isEn ? "Options" : "보기"}
+                    <span className="ml-2 text-xs font-normal text-muted-foreground">
+                      {form.options.length}/{MAX_OPTIONS}
+                    </span>
+                  </Label>
+                  {form.question_type !== "ox" && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="h-7 text-xs"
+                      disabled={form.options.length >= MAX_OPTIONS}
+                      onClick={() =>
+                        setForm((f) => ({ ...f, options: [...f.options, ""] }))
+                      }
+                    >
+                      <Plus className="h-3.5 w-3.5 mr-1" />
+                      {isEn ? "Add option" : "보기 추가"}
+                    </Button>
+                  )}
+                </div>
                 {form.options.map((opt, i) => (
                   <div key={i} className="flex gap-2 items-center">
                     <span className="text-xs w-6 text-muted-foreground">{String.fromCharCode(65 + i)}.</span>
@@ -438,10 +460,38 @@ export default function AdminQuestionBank() {
                       onCheckedChange={(checked) => checked && setForm((f) => ({ ...f, correct_answer: opt }))}
                     />
                     <span className="text-xs text-muted-foreground w-10">{isEn ? "Correct" : "정답"}</span>
+                    {form.question_type !== "ox" && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 shrink-0"
+                        aria-label={isEn ? "Remove option" : "보기 삭제"}
+                        disabled={form.options.length <= MIN_OPTIONS}
+                        onClick={() =>
+                          setForm((f) => {
+                            const next = f.options.filter((_, idx) => idx !== i);
+                            return {
+                              ...f,
+                              options: next,
+                              correct_answer: next.includes(f.correct_answer) ? f.correct_answer : "",
+                            };
+                          })
+                        }
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
                   </div>
                 ))}
+                <p className="text-[11px] text-muted-foreground">
+                  {isEn
+                    ? `Choice questions support ${MIN_OPTIONS}–${MAX_OPTIONS} options.`
+                    : `객관식 보기는 ${MIN_OPTIONS}개부터 최대 ${MAX_OPTIONS}개까지 사용할 수 있습니다.`}
+                </p>
               </div>
             )}
+
 
             {!isChoice && (
               <div>
