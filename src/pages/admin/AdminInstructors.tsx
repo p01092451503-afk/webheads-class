@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { InstructorEditDialog } from "@/components/admin/InstructorPicker";
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, Search, Pencil, BookOpen, User, Mail } from "lucide-react";
@@ -27,6 +28,7 @@ interface InstructorProfileRow {
   years_experience: number | null;
   website_url: string | null;
   public_email: string | null;
+  tags: string[] | null;
 }
 
 export default function AdminInstructors() {
@@ -34,6 +36,8 @@ export default function AdminInstructors() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [tagFilter, setTagFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("name");
 
   // 강사 권한을 가진 사용자 + 프로필
   const { data: teachers = [], isLoading } = useQuery({
@@ -126,19 +130,34 @@ export default function AdminInstructors() {
     },
   });
 
+  // 등록된 모든 분류 태그
+  const allTags = useMemo(() => {
+    const set = new Set<string>();
+    Object.values(profilesMap).forEach((p) => (p.tags || []).forEach((tg) => tg && set.add(tg)));
+    return Array.from(set).sort((a, b) => a.localeCompare(b, "ko"));
+  }, [profilesMap]);
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return teachers;
-    return teachers.filter((t) => {
+    let list = teachers.filter((t) => {
       const p = profilesMap[t.user_id];
+      if (tagFilter !== "all" && !(p?.tags || []).includes(tagFilter)) return false;
+      if (!q) return true;
       return (
         (t.full_name || "").toLowerCase().includes(q) ||
         (t.email || "").toLowerCase().includes(q) ||
         (p?.headline || "").toLowerCase().includes(q) ||
-        (p?.expertise || []).some((e) => e.toLowerCase().includes(q))
+        (p?.expertise || []).some((e) => e.toLowerCase().includes(q)) ||
+        (p?.tags || []).some((e) => e.toLowerCase().includes(q))
       );
     });
-  }, [teachers, profilesMap, search]);
+    list = [...list].sort((a, b) => {
+      if (sortBy === "courses") return (courseCountMap[b.user_id] || 0) - (courseCountMap[a.user_id] || 0);
+      if (sortBy === "profile") return Number(!!profilesMap[b.user_id]) - Number(!!profilesMap[a.user_id]);
+      return (a.full_name || "").localeCompare(b.full_name || "", "ko");
+    });
+    return list;
+  }, [teachers, profilesMap, search, tagFilter, sortBy, courseCountMap]);
 
   const totalWithProfile = teachers.filter((t) => !!profilesMap[t.user_id]).length;
 
@@ -177,7 +196,8 @@ export default function AdminInstructors() {
           </div>
         </div>
 
-        <div className="relative max-w-md">
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+        <div className="relative max-w-md flex-1 min-w-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="이름, 이메일, 전문 분야로 검색"
@@ -185,6 +205,22 @@ export default function AdminInstructors() {
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
           />
+        </div>
+          <Select value={tagFilter} onValueChange={setTagFilter}>
+            <SelectTrigger className="w-full sm:w-44"><SelectValue placeholder="분류 전체" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">분류 전체</SelectItem>
+              {allTags.map((tg) => <SelectItem key={tg} value={tg}>{tg}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-full sm:w-40"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="name">이름순</SelectItem>
+              <SelectItem value="courses">담당 강의 많은순</SelectItem>
+              <SelectItem value="profile">프로필 등록순</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* List */}

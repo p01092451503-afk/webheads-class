@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useTableSort, sortRows } from "@/hooks/useTableSort";
 import TablePagination, { usePagination } from "@/components/table/TablePagination";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Calculator, Plus, Trash2, Check, Wallet, X, FileSpreadsheet, RefreshCw } from "lucide-react";
+import { Calculator, Plus, Trash2, Check, Wallet, X, FileSpreadsheet, RefreshCw, CalendarClock } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -109,11 +109,11 @@ const AdminSettlements = () => {
   );
 
   /** 기간 내 결제완료 매출 · 환불액 · 수강신청 건수를 집계 */
-  const calcGross = async () => {
+  const calcGross = async (range?: { start: string; end: string }) => {
     if (!form.instructor_id) return toast.error("강사를 먼저 선택하세요.");
     if (targetCourseIds.length === 0) return toast.error("해당 강사에게 배정된 과정이 없습니다.");
-    const from = `${form.period_start}T00:00:00`;
-    const to = `${form.period_end}T23:59:59`;
+    const from = `${range?.start ?? form.period_start}T00:00:00`;
+    const to = `${range?.end ?? form.period_end}T23:59:59`;
     setCalculating(true);
     try {
       const { data: paidOrders, error: oErr } = await supabase
@@ -169,6 +169,18 @@ const AdminSettlements = () => {
     } finally {
       setCalculating(false);
     }
+  };
+
+  /** 매달 정산 처리: 지난달 1일~말일 기간을 자동으로 채우고 즉시 집계한다. */
+  const runMonthlySettlement = async () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const end = new Date(now.getFullYear(), now.getMonth(), 0);
+    const fmt = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const range = { start: fmt(start), end: fmt(end) };
+    setForm((f) => ({ ...f, period_start: range.start, period_end: range.end }));
+    await calcGross(range);
   };
 
   const settleAmount = useMemo(() => {
@@ -371,7 +383,11 @@ const AdminSettlements = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <Button variant="outline" onClick={calcGross} disabled={calculating}>
+            <Button variant="secondary" onClick={runMonthlySettlement} disabled={calculating}>
+              <CalendarClock className="h-4 w-4 mr-1" aria-hidden="true" />
+              매달 정산 처리(지난달)
+            </Button>
+            <Button variant="outline" onClick={() => calcGross()} disabled={calculating}>
               <RefreshCw className={`h-4 w-4 mr-1 ${calculating ? "animate-spin" : ""}`} aria-hidden="true" />
               데이터 집계
             </Button>

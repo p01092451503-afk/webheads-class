@@ -4463,6 +4463,7 @@ export type Database = {
           photo_url: string | null
           public_email: string | null
           social: Json
+          tags: string[]
           updated_at: string
           user_id: string
           website_url: string | null
@@ -4476,6 +4477,7 @@ export type Database = {
           photo_url?: string | null
           public_email?: string | null
           social?: Json
+          tags?: string[]
           updated_at?: string
           user_id: string
           website_url?: string | null
@@ -4489,6 +4491,7 @@ export type Database = {
           photo_url?: string | null
           public_email?: string | null
           social?: Json
+          tags?: string[]
           updated_at?: string
           user_id?: string
           website_url?: string | null
@@ -7324,7 +7327,9 @@ export type Database = {
           min_password_length: number | null
           notify_assignment_submit: boolean | null
           notify_completion: boolean | null
+          notify_inquiry: boolean
           notify_new_signup: boolean | null
+          notify_purchase: boolean
           platform_name: string | null
           postal_code: string | null
           privacy_policy: string | null
@@ -7340,6 +7345,7 @@ export type Database = {
           teacher_role_enabled: boolean
           timezone: string | null
           two_factor_auth: boolean | null
+          two_factor_method: string
           updated_at: string
           youtube_url: string | null
         }
@@ -7373,7 +7379,9 @@ export type Database = {
           min_password_length?: number | null
           notify_assignment_submit?: boolean | null
           notify_completion?: boolean | null
+          notify_inquiry?: boolean
           notify_new_signup?: boolean | null
+          notify_purchase?: boolean
           platform_name?: string | null
           postal_code?: string | null
           privacy_policy?: string | null
@@ -7389,6 +7397,7 @@ export type Database = {
           teacher_role_enabled?: boolean
           timezone?: string | null
           two_factor_auth?: boolean | null
+          two_factor_method?: string
           updated_at?: string
           youtube_url?: string | null
         }
@@ -7422,7 +7431,9 @@ export type Database = {
           min_password_length?: number | null
           notify_assignment_submit?: boolean | null
           notify_completion?: boolean | null
+          notify_inquiry?: boolean
           notify_new_signup?: boolean | null
+          notify_purchase?: boolean
           platform_name?: string | null
           postal_code?: string | null
           privacy_policy?: string | null
@@ -7438,6 +7449,7 @@ export type Database = {
           teacher_role_enabled?: boolean
           timezone?: string | null
           two_factor_auth?: boolean | null
+          two_factor_method?: string
           updated_at?: string
           youtube_url?: string | null
         }

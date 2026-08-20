@@ -470,6 +470,8 @@ export function InstructorEditDialog({
   const [headline, setHeadline] = useState(existing?.headline || "");
   const [bio, setBio] = useState(existing?.bio || "");
   const [expertiseText, setExpertiseText] = useState((existing?.expertise || []).join(", "));
+  // 분류 태그(예: 전임, 외부, 특강) – 강사 목록 필터에 사용
+  const [tagsText, setTagsText] = useState(((existing as any)?.tags || []).join(", "));
   const [years, setYears] = useState<string>(existing?.years_experience?.toString() || "");
   const [website, setWebsite] = useState(existing?.website_url || "");
   const [publicEmail, setPublicEmail] = useState(existing?.public_email || "");
@@ -482,6 +484,7 @@ export function InstructorEditDialog({
     setHeadline(existing?.headline || "");
     setBio(existing?.bio || "");
     setExpertiseText((existing?.expertise || []).join(", "));
+    setTagsText(((existing as any)?.tags || []).join(", "));
     setYears(existing?.years_experience?.toString() || "");
     setWebsite(existing?.website_url || "");
     setPublicEmail(existing?.public_email || "");
@@ -519,6 +522,7 @@ export function InstructorEditDialog({
           headline: headline || null,
           bio: bio || null,
           expertise,
+          tags: tagsText.split(",").map((s2) => s2.trim()).filter(Boolean),
           years_experience: years === "" ? null : Number(years),
           website_url: website || null,
           public_email: publicEmail || null,
@@ -601,6 +605,14 @@ export function InstructorEditDialog({
                 value={expertiseText}
                 onChange={(e) => setExpertiseText(e.target.value)}
                 placeholder="예: 노동법, 인사관리, 산업안전"
+              />
+            </div>
+            <div className="space-y-1.5 md:col-span-2">
+              <label className="text-xs text-muted-foreground">분류 태그 (쉼표로 구분)</label>
+              <Input
+                value={tagsText}
+                onChange={(e) => setTagsText(e.target.value)}
+                placeholder="예: 전임, 외부, 특강"
               />
             </div>
             <div className="space-y-1.5 md:col-span-2">
