@@ -31,6 +31,7 @@ interface GeneralSettingsForm {
   min_password_length: number;
   session_expiry_hours: number;
   two_factor_auth: boolean;
+  two_factor_method: string;
   teacher_role_enabled: boolean;
   b2c_enabled: boolean;
 }
@@ -42,9 +43,12 @@ const DEFAULT_FORM: GeneralSettingsForm = {
   notify_new_signup: true,
   notify_assignment_submit: true,
   notify_completion: true,
+  notify_purchase: true,
+  notify_inquiry: true,
   min_password_length: 8,
   session_expiry_hours: 24,
   two_factor_auth: false,
+  two_factor_method: "email",
   teacher_role_enabled: true,
   b2c_enabled: true,
 };
@@ -88,9 +92,12 @@ const AdminSettings = () => {
         notify_new_signup: (siteSettings as any).notify_new_signup ?? DEFAULT_FORM.notify_new_signup,
         notify_assignment_submit: (siteSettings as any).notify_assignment_submit ?? DEFAULT_FORM.notify_assignment_submit,
         notify_completion: (siteSettings as any).notify_completion ?? DEFAULT_FORM.notify_completion,
+        notify_purchase: (siteSettings as any).notify_purchase ?? DEFAULT_FORM.notify_purchase,
+        notify_inquiry: (siteSettings as any).notify_inquiry ?? DEFAULT_FORM.notify_inquiry,
         min_password_length: (siteSettings as any).min_password_length ?? DEFAULT_FORM.min_password_length,
         session_expiry_hours: (siteSettings as any).session_expiry_hours ?? DEFAULT_FORM.session_expiry_hours,
         two_factor_auth: (siteSettings as any).two_factor_auth ?? DEFAULT_FORM.two_factor_auth,
+        two_factor_method: (siteSettings as any).two_factor_method ?? DEFAULT_FORM.two_factor_method,
         teacher_role_enabled: (siteSettings as any).teacher_role_enabled ?? DEFAULT_FORM.teacher_role_enabled,
         b2c_enabled: (siteSettings as any).b2c_enabled ?? DEFAULT_FORM.b2c_enabled,
       });
@@ -616,6 +623,19 @@ const AdminSettings = () => {
                   <label className="text-sm text-foreground">{t("admin.twoFactorAuth")}</label>
                   <Switch checked={form.two_factor_auth} onCheckedChange={(v) => setForm({ ...form, two_factor_auth: v })} />
                 </div>
+                {form.two_factor_auth && (
+                  <div className="flex items-center justify-between gap-4">
+                    <label className="text-sm text-foreground">{t("admin.twoFactorMethod", "인증 방식")}</label>
+                    <Select value={form.two_factor_method} onValueChange={(v) => setForm({ ...form, two_factor_method: v })}>
+                      <SelectTrigger className="w-64 h-9 rounded-xl"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="email">{t("admin.twoFactorEmail", "이메일 인증")}</SelectItem>
+                        <SelectItem value="sms">{t("admin.twoFactorSms", "SMS 문자 인증")}</SelectItem>
+                        <SelectItem value="otp">{t("admin.twoFactorOtp", "OTP 인증 앱")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
             </div>
 
