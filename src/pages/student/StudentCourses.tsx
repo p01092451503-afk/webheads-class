@@ -16,6 +16,12 @@ import { CourseCatalogContent } from "@/pages/student/CourseCatalog";
 import { useCourseI18n } from "@/hooks/useI18nMaps";
 import { useInlineEnName } from "@/hooks/useI18nMaps";
 import CourseAccessActions from "@/components/student/CourseAccessActions";
+import {
+  Input as JcInput,
+  PageHeader,
+  ProgressBar,
+} from "@/design-system/webheads-class";
+
 
 const StudentCourses = () => {
   const { user } = useUser();
