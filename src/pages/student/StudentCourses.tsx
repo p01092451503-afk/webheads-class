@@ -131,11 +131,9 @@ const StudentCourses = () => {
             {cat && <span className="text-[10px] text-muted-foreground bg-secondary px-2 py-0.5 rounded-md">{cat.name}</span>}
           </div>
           {!isCompleted && (
-            <div className="flex items-center gap-3">
-              <Progress value={progress} className="flex-1 h-1.5" aria-label={`${t("dashboard.progressRate")}: ${Math.round(progress)}%`} />
-              <span className="text-xs font-medium text-muted-foreground">{Math.round(progress)}%</span>
-            </div>
+            <ProgressBar value={Math.round(progress)} label={t("dashboard.progressRate")} />
           )}
+
           {isCompleted && (
             <div className="flex items-center gap-1.5">
               <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" aria-hidden="true" />
