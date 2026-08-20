@@ -38,6 +38,9 @@ interface FormState {
   is_active: boolean;
 }
 
+const MIN_OPTIONS = 2;
+const MAX_OPTIONS = 10;
+
 const emptyForm: FormState = {
   course_id: null,
   category_id: null,
