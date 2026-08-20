@@ -811,41 +811,52 @@ const StudentDashboard = () => {
 
         {/* 학습 통계 + 추천 강의 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          <div className="stat-card !p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-primary" aria-hidden="true" />
-                {isEn ? "Lessons completed (7d)" : "최근 7일 학습 차시"}
-              </h3>
-              <span className="text-xs text-muted-foreground">
-                {weeklyActivity.reduce((s, d) => s + d.value, 0)}{isEn ? "" : "차시"}
-              </span>
-            </div>
-            <Suspense fallback={<div className="h-[180px]" />}>
-              <DashCharts.Bar data={weeklyActivity} dataKey="value" xKey="name" color="hsl(var(--primary))" height={180} unit={isEn ? "" : "차시"} />
-            </Suspense>
-          </div>
+          <JcCard>
+            <CardHeader
+              title={
+                <span className="inline-flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-primary" aria-hidden="true" />
+                  {isEn ? "Lessons completed (7d)" : "최근 7일 학습 차시"}
+                </span>
+              }
+              action={
+                <span className="text-xs text-muted-foreground">
+                  {weeklyActivity.reduce((s, d) => s + d.value, 0)}{isEn ? "" : "차시"}
+                </span>
+              }
+            />
+            <CardBody>
+              <Suspense fallback={<div className="h-[180px]" />}>
+                <DashCharts.Bar data={weeklyActivity} dataKey="value" xKey="name" color="hsl(var(--primary))" height={180} unit={isEn ? "" : "차시"} />
+              </Suspense>
+            </CardBody>
+          </JcCard>
 
-          <div className="stat-card !p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-chart-3" aria-hidden="true" />
-                {isEn ? "My Course Status" : "내 강의 진행 상태"}
-              </h3>
-              <span className="text-xs text-muted-foreground">{enrollmentStats?.total || 0}{isEn ? "" : "개"}</span>
-            </div>
-            <Suspense fallback={<div className="h-[180px]" />}>
-              <DashCharts.Donut
-                height={180}
-                centerValue={`${enrollmentStats?.avgProgress || 0}%`}
-                centerLabel={isEn ? "Avg progress" : "평균 진도"}
-                data={[
-                  { name: isEn ? "Completed" : "수료", value: enrollmentStats?.completed || 0, color: "hsl(158 64% 42%)" },
-                  { name: isEn ? "In progress" : "진행중", value: enrollmentStats?.inProgress || 0, color: "hsl(217 91% 55%)" },
-                ].filter(d => d.value > 0)}
-              />
-            </Suspense>
-          </div>
+          <JcCard>
+            <CardHeader
+              title={
+                <span className="inline-flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-chart-3" aria-hidden="true" />
+                  {isEn ? "My Course Status" : "내 강의 진행 상태"}
+                </span>
+              }
+              action={<span className="text-xs text-muted-foreground">{enrollmentStats?.total || 0}{isEn ? "" : "개"}</span>}
+            />
+            <CardBody>
+              <Suspense fallback={<div className="h-[180px]" />}>
+                <DashCharts.Donut
+                  height={180}
+                  centerValue={`${enrollmentStats?.avgProgress || 0}%`}
+                  centerLabel={isEn ? "Avg progress" : "평균 진도"}
+                  data={[
+                    { name: isEn ? "Completed" : "수료", value: enrollmentStats?.completed || 0, color: "hsl(158 64% 42%)" },
+                    { name: isEn ? "In progress" : "진행중", value: enrollmentStats?.inProgress || 0, color: "hsl(217 91% 55%)" },
+                  ].filter(d => d.value > 0)}
+                />
+              </Suspense>
+            </CardBody>
+          </JcCard>
+
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
