@@ -72,7 +72,10 @@ const SitePopups = () => {
 
   if (!mounted) return null;
 
-  const visible = popups.filter((p) => !closed.includes(p.id) && !isHiddenToday(p.id));
+  // 팝업이 겹쳐 보이는 문제를 막기 위해 한 번에 하나만 노출하고,
+  // 닫으면 다음 팝업이 순서대로 표시된다.
+  const queue = popups.filter((p) => !closed.includes(p.id) && !isHiddenToday(p.id));
+  const visible = queue.slice(0, 1);
   if (visible.length === 0) return null;
 
   const close = (id: string) => setClosed((c) => [...c, id]);
@@ -85,13 +88,13 @@ const SitePopups = () => {
 
   return (
     <>
-      {visible.map((p, i) => (
+      {visible.map((p) => (
         <div
           key={p.id}
           role="dialog"
           aria-label={p.title}
           className={`fixed z-50 ${posClass(p.position)} max-w-[92vw]`}
-          style={{ width: p.width || 420, marginTop: i * 16, marginLeft: i * 16 }}
+          style={{ width: p.width || 420 }}
         >
           <div className="bg-card border border-border rounded-lg shadow-lg overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
