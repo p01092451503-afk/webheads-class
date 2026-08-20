@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import MemberCombobox from "@/components/admin/MemberCombobox";
 import { supabase } from "@/integrations/supabase/client";
 import { useTableSort, sortRows } from "@/hooks/useTableSort";
 import TablePagination, { usePagination } from "@/components/table/TablePagination";
