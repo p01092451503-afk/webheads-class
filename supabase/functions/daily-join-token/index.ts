@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
       .eq("id", sessionId)
       .maybeSingle();
     if (!session) return json({ error: "session not found" }, 404);
-    if (!session.daily_room_name) return json({ error: "room not ready" }, 400);
+
 
     const { data: roleRows } = await service
       .from("user_roles")
@@ -46,6 +46,42 @@ Deno.serve(async (req) => {
     const roles = (roleRows ?? []).map((r: { role: string }) => r.role);
     const isAdmin = roles.includes("admin") || roles.includes("super_admin");
     const isHost = session.host_user_id === user.id;
+
+    // 방이 아직 없으면 자동 생성 (호스트/관리자)
+    if (!session.daily_room_name) {
+      if (!isHost && !isAdmin) return json({ error: "room not ready" }, 400);
+      const expSec = Math.floor(new Date(session.scheduled_end).getTime() / 1000) + 1800;
+      const roomName = `s-${sessionId.slice(0, 8)}-${Date.now().toString(36)}`;
+      const roomRes = await fetch("https://api.daily.co/v1/rooms", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${DAILY_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: roomName,
+          privacy: "private",
+          properties: {
+            exp: expSec,
+            enable_chat: true,
+            enable_screenshare: true,
+            enable_recording: session.recording_enabled ? "cloud" : undefined,
+            eject_at_room_exp: true,
+          },
+        }),
+      });
+      const roomData = await roomRes.json();
+      if (!roomRes.ok) {
+        console.error("daily room create failed", roomData);
+        return json({ error: "daily_create_failed", details: roomData }, 500);
+      }
+      session.daily_room_name = roomData.name;
+      session.daily_room_url = roomData.url;
+      await service
+        .from("video_sessions")
+        .update({ daily_room_name: roomData.name, daily_room_url: roomData.url })
+        .eq("id", sessionId);
+    }
 
     let isParticipant = false;
     if (!isHost && !isAdmin) {
