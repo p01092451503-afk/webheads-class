@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Receipt, Plus, Trash2, Check, X } from "lucide-react";
+import { Receipt, Plus, Trash2, Check, X, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 const fmt = (v?: string | null) => (v ? new Date(v).toLocaleDateString("ko-KR") : "-");
 const won = (n: number) => `${Number(n || 0).toLocaleString()}원`;
@@ -23,6 +24,9 @@ const AdminRefunds = () => {
   const [selectedPolicy, setSelectedPolicy] = useState<string>("");
   const [ruleForm, setRuleForm] = useState({ from_value: "0", to_value: "", refund_percent: "100" });
   const [note, setNote] = useState<Record<string, string>>({});
+  // 직권(관리자 강제) 환불 등록
+  const [forceOpen, setForceOpen] = useState(false);
+  const [forceForm, setForceForm] = useState({ order_id: "", amount: "", reason: "" });
 
   const { data: policies = [] } = useQuery({
     queryKey: ["refund-policies"],
@@ -96,6 +100,53 @@ const AdminRefunds = () => {
       setRuleForm({ from_value: "0", to_value: "", refund_percent: "100" });
     }, "구간이 추가되었습니다.", [["refund-policy-rules", selectedPolicy]]);
 
+  /** 결제완료 주문 목록 – 직권 환불 대상 선택용 */
+  const { data: paidOrders = [] } = useQuery({
+    queryKey: ["refund-paid-orders"],
+    enabled: forceOpen,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("id, order_number, total_amount, user_id, created_at, profiles:user_id(full_name, email)")
+        .eq("status", "paid")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (error) throw error;
+      return (data || []) as any[];
+    },
+  });
+
+  /** 관리자가 사용자 요청 없이 직접 환불 건을 생성하고 즉시 승인 처리한다. */
+  const createForceRefund = () =>
+    run(async () => {
+      const order = paidOrders.find((o) => o.id === forceForm.order_id);
+      if (!order) throw new Error("환불할 주문을 선택하세요.");
+      const amount = Number(forceForm.amount);
+      if (!amount || amount <= 0) throw new Error("환불 금액을 입력하세요.");
+      const paid = Number(order.total_amount || 0);
+      const { data: u } = await supabase.auth.getUser();
+      const { data: items } = await supabase
+        .from("order_items").select("course_id").eq("order_id", order.id).limit(1);
+      const { error } = await supabase.from("refund_requests").insert({
+        user_id: order.user_id,
+        order_id: order.id,
+        course_id: items?.[0]?.course_id ?? null,
+        paid_amount: paid,
+        refund_percent: paid > 0 ? Math.round((amount / paid) * 100) : 0,
+        calculated_amount: amount,
+        final_amount: amount,
+        is_partial: amount < paid,
+        status: "approved",
+        reason: forceForm.reason.trim() || "관리자 직권 환불",
+        admin_note: "관리자 직권 환불 등록",
+        processed_by: u.user?.id ?? null,
+        processed_at: new Date().toISOString(),
+      });
+      if (error) throw error;
+      setForceOpen(false);
+      setForceForm({ order_id: "", amount: "", reason: "" });
+    }, "직권 환불이 등록되었습니다.", ["refund-requests"]);
+
   const decide = (row: any, approve: boolean) =>
     run(async () => {
       const { data: u } = await supabase.auth.getUser();
@@ -139,6 +190,11 @@ const AdminRefunds = () => {
           </TabsList>
 
           <TabsContent value="requests" className="space-y-3">
+            <div className="flex justify-end">
+              <Button onClick={() => setForceOpen(true)}>
+                <ShieldCheck className="h-4 w-4 mr-1" /> 직권 환불 등록
+              </Button>
+            </div>
             <div className="border rounded-xl divide-y">
               {requests.map((r) => (
                 <div key={r.id} className="p-4 space-y-2 min-w-0">
@@ -258,6 +314,53 @@ const AdminRefunds = () => {
             )}
           </TabsContent>
         </Tabs>
+
+        <Dialog open={forceOpen} onOpenChange={setForceOpen}>
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+            <DialogHeader><DialogTitle>직권 환불 등록</DialogTitle></DialogHeader>
+            <div className="space-y-3">
+              <div>
+                <Label className="text-xs">결제 주문</Label>
+                <Select
+                  value={forceForm.order_id}
+                  onValueChange={(v) => {
+                    const o = paidOrders.find((x) => x.id === v);
+                    setForceForm({ ...forceForm, order_id: v, amount: String(o?.total_amount ?? "") });
+                  }}
+                >
+                  <SelectTrigger><SelectValue placeholder="주문 선택" /></SelectTrigger>
+                  <SelectContent>
+                    {paidOrders.map((o) => (
+                      <SelectItem key={o.id} value={o.id}>
+                        {o.order_number} · {o.profiles?.full_name || o.profiles?.email || "-"} · {won(o.total_amount)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs">환불 금액(원)</Label>
+                <Input
+                  type="number"
+                  value={forceForm.amount}
+                  onChange={(e) => setForceForm({ ...forceForm, amount: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label className="text-xs">사유</Label>
+                <Textarea
+                  value={forceForm.reason}
+                  onChange={(e) => setForceForm({ ...forceForm, reason: e.target.value })}
+                  placeholder="예) 서비스 장애로 인한 관리자 직권 환불"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setForceOpen(false)}>취소</Button>
+              <Button onClick={createForceRefund}>등록</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );
