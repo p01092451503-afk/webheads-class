@@ -55,9 +55,27 @@ const BunnyImportDialog = () => {
         "bunny-stream-list",
         { body: {} },
       );
-      if (error) throw new Error(error.message || "Bunny 목록을 불러오지 못했습니다");
+      // 엣지 함수가 4xx/5xx 를 반환하면 supabase-js 는 원인을 감춘 일반 메시지를 주므로
+      // 응답 본문의 error/details 를 꺼내 실제 원인을 노출한다.
+      if (error) {
+        let detail = "";
+        try {
+          const res = (error as any)?.context;
+          if (res && typeof res.json === "function") {
+            const body = await res.json();
+            detail = [body?.error, body?.status, body?.details].filter(Boolean).join(" · ");
+          }
+        } catch { /* ignore body parse failures */ }
+        throw new Error(detail || error.message || "CDN 영상 목록을 불러오지 못했습니다");
+      }
+      if ((data as any)?.error) {
+        throw new Error(
+          [(data as any).error, (data as any).details].filter(Boolean).join(" · "),
+        );
+      }
       return (data?.videos || []) as BunnyVideo[];
     },
+
   });
 
   // Look up which GUIDs already exist locally to render the "이미 등록" badge.
