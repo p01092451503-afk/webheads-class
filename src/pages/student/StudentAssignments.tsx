@@ -147,10 +147,16 @@ const StudentAssignments = () => {
   return (
     <DashboardLayout role="student">
       <div className="space-y-8">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground flex items-center gap-2"><ClipboardList className="h-6 w-6" aria-hidden="true" />{t("assignments.title")}</h1>
-          <p className="text-sm text-muted-foreground mt-1">{t("assignments.subtitle")}</p>
-        </div>
+        <PageHeader
+          title={
+            <span className="inline-flex items-center gap-2">
+              <ClipboardList className="h-6 w-6" aria-hidden="true" />
+              {t("assignments.title")}
+            </span>
+          }
+          subtitle={t("assignments.subtitle")}
+        />
+
 
         <section
           className="grid grid-cols-3 gap-2 sm:gap-3"
