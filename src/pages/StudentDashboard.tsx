@@ -673,11 +673,11 @@ const StudentDashboard = () => {
 
         <SelfLearningCard />
 
-        <div className="stat-card !p-6 space-y-5">
-          <div>
-            <h2 className="text-lg font-bold text-foreground">{t("dashboard.ongoingCourses")}</h2>
-            <p className="text-sm text-muted-foreground mt-0.5">{t("dashboard.continueStudy")}</p>
-          </div>
+        <JcCard>
+          <CardHeader title={t("dashboard.ongoingCourses")} />
+          <CardBody className="space-y-5">
+          <p className="text-sm text-muted-foreground">{t("dashboard.continueStudy")}</p>
+
 
           {enrollments.length === 0 ? (
             <div className="text-center py-8">
