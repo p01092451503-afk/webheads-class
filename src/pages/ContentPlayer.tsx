@@ -553,6 +553,9 @@ const ContentPlayer = () => {
         enablejsapi: "1",
         rel: "0",
         modestbranding: "1",
+        playsinline: "1",
+        // enablejsapi=1 요청은 origin이 없으면 YouTube가 "Error 153"으로 재생을 거부한다.
+        origin: typeof window !== "undefined" ? window.location.origin : "",
         ...(resumeChoice === "resume" && videoProgress.resumePosition > 0 && !currentProgress?.completed
           ? { start: String(videoProgress.resumePosition) }
           : {}),
