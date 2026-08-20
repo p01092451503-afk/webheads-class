@@ -474,7 +474,7 @@ const AdminDesignManager = () => {
 
       {/* 팝업 다이얼로그 */}
       <Dialog open={popupOpen} onOpenChange={(o) => { setPopupOpen(o); if (!o) { setPopupForm(emptyPopup); setPopupImageError(false); } }}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader><DialogTitle>{popupForm.id ? "팝업 수정" : "팝업 등록"}</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <div><Label>제목</Label><Input value={popupForm.title} onChange={(e) => setPopupForm({ ...popupForm, title: e.target.value })} /></div>
@@ -623,7 +623,7 @@ const AdminDesignManager = () => {
 
       {/* 정적 페이지 다이얼로그 */}
       <Dialog open={pageOpen} onOpenChange={setPageOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader><DialogTitle>{pageForm.id ? "페이지 수정" : "페이지 등록"}</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <div><Label>페이지 제목</Label><Input value={pageForm.title} onChange={(e) => setPageForm({ ...pageForm, title: e.target.value })} /></div>
