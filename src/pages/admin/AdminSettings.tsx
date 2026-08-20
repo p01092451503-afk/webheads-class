@@ -26,6 +26,8 @@ interface GeneralSettingsForm {
   notify_new_signup: boolean;
   notify_assignment_submit: boolean;
   notify_completion: boolean;
+  notify_purchase: boolean;
+  notify_inquiry: boolean;
   min_password_length: number;
   session_expiry_hours: number;
   two_factor_auth: boolean;
