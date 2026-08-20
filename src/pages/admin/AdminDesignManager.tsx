@@ -395,6 +395,15 @@ const AdminDesignManager = () => {
                         invalidate("static-pages");
                       }}
                     />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 gap-1 text-xs"
+                      onClick={() => window.open(`/p/${p.slug}`, "_blank", "noopener")}
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      미리보기
+                    </Button>
                     <Button variant="ghost" size="icon" onClick={() => {
                       setPageForm({
                         id: p.id, slug: p.slug, title: p.title, content: p.content || "",
