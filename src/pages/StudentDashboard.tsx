@@ -17,6 +17,15 @@ import SelfLearningCard from "@/components/student/SelfLearningCard";
 import { lazy, Suspense } from "react";
 import { format as fmtDate, subDays } from "date-fns";
 import { useCourseI18n, useContentI18n } from "@/hooks/useI18nMaps";
+import {
+  Button as JcButton,
+  Card as JcCard,
+  CardHeader,
+  CardBody,
+  PageHeader,
+  ProgressBar,
+} from "@/design-system/webheads-class";
+
 const DashCharts = {
   Bar: lazy(() => import("@/components/charts/DashboardCharts").then(m => ({ default: m.SimpleBarChart }))),
   Donut: lazy(() => import("@/components/charts/DashboardCharts").then(m => ({ default: m.DonutChart }))),
@@ -514,16 +523,19 @@ const StudentDashboard = () => {
     <DashboardLayout role="student">
       <div className="space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-xl sm:text-2xl font-semibold text-foreground flex items-center gap-2">
-            <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6 text-primary" aria-hidden="true" />
-            {t("dashboard.learningDashboard")}
-          </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("dashboard.hello")}</p>
-        </div>
+        <PageHeader
+          title={
+            <span className="inline-flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6 text-primary" aria-hidden="true" />
+              {t("dashboard.learningDashboard")}
+            </span>
+          }
+          subtitle={t("dashboard.hello")}
+        />
 
         {/* Stat Cards — visualized 2 rows of 4 */}
         <section className="grid grid-cols-2 sm:grid-cols-4 gap-3" aria-label={t("dashboard.stats", "학습 통계")}>
+
           {richStats.map((stat) => {
             const Icon = stat.icon;
             const content = (
@@ -670,11 +682,11 @@ const StudentDashboard = () => {
 
         <SelfLearningCard />
 
-        <div className="stat-card !p-6 space-y-5">
-          <div>
-            <h2 className="text-lg font-bold text-foreground">{t("dashboard.ongoingCourses")}</h2>
-            <p className="text-sm text-muted-foreground mt-0.5">{t("dashboard.continueStudy")}</p>
-          </div>
+        <JcCard>
+          <CardHeader title={t("dashboard.ongoingCourses")} />
+          <CardBody className="space-y-5">
+          <p className="text-sm text-muted-foreground">{t("dashboard.continueStudy")}</p>
+
 
           {enrollments.length === 0 ? (
             <div className="text-center py-8">
@@ -804,90 +816,94 @@ const StudentDashboard = () => {
               </div>
             );
           })()}
-        </div>
+          </CardBody>
+        </JcCard>
+
 
         {/* 학습 통계 + 추천 강의 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          <div className="stat-card !p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-primary" aria-hidden="true" />
-                {isEn ? "Lessons completed (7d)" : "최근 7일 학습 차시"}
-              </h3>
-              <span className="text-xs text-muted-foreground">
-                {weeklyActivity.reduce((s, d) => s + d.value, 0)}{isEn ? "" : "차시"}
-              </span>
-            </div>
-            <Suspense fallback={<div className="h-[180px]" />}>
-              <DashCharts.Bar data={weeklyActivity} dataKey="value" xKey="name" color="hsl(var(--primary))" height={180} unit={isEn ? "" : "차시"} />
-            </Suspense>
-          </div>
+          <JcCard>
+            <CardHeader
+              title={
+                <span className="inline-flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-primary" aria-hidden="true" />
+                  {isEn ? "Lessons completed (7d)" : "최근 7일 학습 차시"}
+                </span>
+              }
+              action={
+                <span className="text-xs text-muted-foreground">
+                  {weeklyActivity.reduce((s, d) => s + d.value, 0)}{isEn ? "" : "차시"}
+                </span>
+              }
+            />
+            <CardBody>
+              <Suspense fallback={<div className="h-[180px]" />}>
+                <DashCharts.Bar data={weeklyActivity} dataKey="value" xKey="name" color="hsl(var(--primary))" height={180} unit={isEn ? "" : "차시"} />
+              </Suspense>
+            </CardBody>
+          </JcCard>
 
-          <div className="stat-card !p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-chart-3" aria-hidden="true" />
-                {isEn ? "My Course Status" : "내 강의 진행 상태"}
-              </h3>
-              <span className="text-xs text-muted-foreground">{enrollmentStats?.total || 0}{isEn ? "" : "개"}</span>
-            </div>
-            <Suspense fallback={<div className="h-[180px]" />}>
-              <DashCharts.Donut
-                height={180}
-                centerValue={`${enrollmentStats?.avgProgress || 0}%`}
-                centerLabel={isEn ? "Avg progress" : "평균 진도"}
-                data={[
-                  { name: isEn ? "Completed" : "수료", value: enrollmentStats?.completed || 0, color: "hsl(158 64% 42%)" },
-                  { name: isEn ? "In progress" : "진행중", value: enrollmentStats?.inProgress || 0, color: "hsl(217 91% 55%)" },
-                ].filter(d => d.value > 0)}
-              />
-            </Suspense>
-          </div>
+          <JcCard>
+            <CardHeader
+              title={
+                <span className="inline-flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-chart-3" aria-hidden="true" />
+                  {isEn ? "My Course Status" : "내 강의 진행 상태"}
+                </span>
+              }
+              action={<span className="text-xs text-muted-foreground">{enrollmentStats?.total || 0}{isEn ? "" : "개"}</span>}
+            />
+            <CardBody>
+              <Suspense fallback={<div className="h-[180px]" />}>
+                <DashCharts.Donut
+                  height={180}
+                  centerValue={`${enrollmentStats?.avgProgress || 0}%`}
+                  centerLabel={isEn ? "Avg progress" : "평균 진도"}
+                  data={[
+                    { name: isEn ? "Completed" : "수료", value: enrollmentStats?.completed || 0, color: "hsl(158 64% 42%)" },
+                    { name: isEn ? "In progress" : "진행중", value: enrollmentStats?.inProgress || 0, color: "hsl(217 91% 55%)" },
+                  ].filter(d => d.value > 0)}
+                />
+              </Suspense>
+            </CardBody>
+          </JcCard>
+
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* 학습 통계 */}
-          <div className="stat-card !p-6 space-y-5">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" aria-hidden="true" /> {t("dashboard.learningStats")}
-            </h2>
-            <div className="space-y-5">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{t("dashboard.weeklyGoal")}</span>
-                  <span className="font-semibold text-foreground">
-                    {gamification?.experience_points ? Math.round(gamification.experience_points / 60) : 0}h / 20h
-                  </span>
-                </div>
-                <Progress
-                  value={Math.min(100, ((gamification?.experience_points ? gamification.experience_points / 60 : 0) / 20) * 100)}
-                  className="h-3"
-                  aria-label={`${t("dashboard.weeklyGoal")}: ${gamification?.experience_points ? Math.round(gamification.experience_points / 60) : 0}h / 20h`}
-                />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{t("dashboard.assignmentCompletionRate")}</span>
-                  <span className="font-semibold text-foreground">{assignmentCompletionRate}%</span>
-                </div>
-                <Progress value={assignmentCompletionRate} className="h-3" aria-label={`${t("dashboard.assignmentCompletionRate")}: ${assignmentCompletionRate}%`} />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{t("dashboard.averageScore")}</span>
-                  <span className="font-semibold text-foreground">{enrollmentStats?.avgProgress || 0}{t("common.points")}</span>
-                </div>
-                <Progress value={enrollmentStats?.avgProgress || 0} className="h-3" aria-label={`${t("dashboard.averageScore")}: ${enrollmentStats?.avgProgress || 0}${t("common.points")}`} />
-              </div>
-            </div>
-          </div>
+          <JcCard>
+            <CardHeader
+              title={
+                <span className="inline-flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" aria-hidden="true" /> {t("dashboard.learningStats")}
+                </span>
+              }
+            />
+            <CardBody className="space-y-5">
+              <ProgressBar
+                label={`${t("dashboard.weeklyGoal")} · ${gamification?.experience_points ? Math.round(gamification.experience_points / 60) : 0}h / 20h`}
+                value={Math.min(100, ((gamification?.experience_points ? gamification.experience_points / 60 : 0) / 20) * 100)}
+              />
+              <ProgressBar
+                label={t("dashboard.assignmentCompletionRate")}
+                value={assignmentCompletionRate}
+                tone="accent"
+              />
+              <ProgressBar
+                label={t("dashboard.averageScore")}
+                value={enrollmentStats?.avgProgress || 0}
+                tone="success"
+              />
+            </CardBody>
+          </JcCard>
+
 
           {/* 추천 강의 */}
-          <div className="stat-card !p-6 space-y-5">
-            <div>
-              <h2 className="text-lg font-bold text-foreground">{t("dashboard.recommendedCourses")}</h2>
-              <p className="text-sm text-muted-foreground mt-0.5">{t("dashboard.recommendedDesc")}</p>
-            </div>
+          <JcCard>
+            <CardHeader title={t("dashboard.recommendedCourses")} />
+            <CardBody className="space-y-3">
+              <p className="text-sm text-muted-foreground">{t("dashboard.recommendedDesc")}</p>
             {recommendedCourses.length === 0 ? (
               <div className="text-center py-6">
                 <p className="text-sm text-muted-foreground">{t("dashboard.noRecommended")}</p>
@@ -895,7 +911,7 @@ const StudentDashboard = () => {
             ) : (
               <div className="space-y-3">
                 {recommendedCourses.map((course: any) => (
-                  <div key={course.id} className="stat-card !p-3 sm:!p-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4" role="article" aria-label={tRecTitle(course)}>
+                  <JcCard key={course.id} variant="flat" className="!p-3 sm:!p-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4" role="article" aria-label={tRecTitle(course)}>
                     <div className="min-w-0 flex-1 space-y-1">
                       <h3 className="text-sm font-semibold text-foreground truncate">{tRecTitle(course)}</h3>
                       <p className="text-xs text-muted-foreground">{recInstructorMap.get(course.instructor_id) || t("dashboard.instructor")}</p>
@@ -904,19 +920,21 @@ const StudentDashboard = () => {
                         <span>{(recEnrollCountMap.get(course.id) || 0).toLocaleString()} {t("dashboard.students")}</span>
                       </div>
                     </div>
-                    <Button
+                    <JcButton
                       size="sm"
-                      className="shrink-0 rounded-full w-full sm:w-auto"
+                      className="shrink-0 w-full sm:w-auto"
                       onClick={() => navigate(`/student/courses/${course.id}?view=learn`)}
                       aria-label={`${tRecTitle(course)} - ${t("common.details")}`}
                     >
                       {t("common.details")}
-                    </Button>
-                  </div>
+                    </JcButton>
+                  </JcCard>
                 ))}
               </div>
             )}
-          </div>
+            </CardBody>
+          </JcCard>
+
         </div>
       </div>
     </DashboardLayout>

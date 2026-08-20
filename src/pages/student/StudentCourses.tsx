@@ -16,6 +16,12 @@ import { CourseCatalogContent } from "@/pages/student/CourseCatalog";
 import { useCourseI18n } from "@/hooks/useI18nMaps";
 import { useInlineEnName } from "@/hooks/useI18nMaps";
 import CourseAccessActions from "@/components/student/CourseAccessActions";
+import {
+  Input as JcInput,
+  PageHeader,
+  ProgressBar,
+} from "@/design-system/webheads-class";
+
 
 const StudentCourses = () => {
   const { user } = useUser();
@@ -131,11 +137,9 @@ const StudentCourses = () => {
             {cat && <span className="text-[10px] text-muted-foreground bg-secondary px-2 py-0.5 rounded-md">{cat.name}</span>}
           </div>
           {!isCompleted && (
-            <div className="flex items-center gap-3">
-              <Progress value={progress} className="flex-1 h-1.5" aria-label={`${t("dashboard.progressRate")}: ${Math.round(progress)}%`} />
-              <span className="text-xs font-medium text-muted-foreground">{Math.round(progress)}%</span>
-            </div>
+            <ProgressBar value={Math.round(progress)} label={t("dashboard.progressRate")} />
           )}
+
           {isCompleted && (
             <div className="flex items-center gap-1.5">
               <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" aria-hidden="true" />
@@ -161,9 +165,15 @@ const StudentCourses = () => {
   return (
     <DashboardLayout role="student">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground flex items-center gap-2"><BookOpen className="h-6 w-6" aria-hidden="true" />{t("course.myCourseRoom")}</h1>
-        </div>
+        <PageHeader
+          title={
+            <span className="inline-flex items-center gap-2">
+              <BookOpen className="h-6 w-6" aria-hidden="true" />
+              {t("course.myCourseRoom")}
+            </span>
+          }
+        />
+
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
           <TabsList className="grid grid-cols-3 w-full max-w-3xl h-auto">
@@ -196,10 +206,11 @@ const StudentCourses = () => {
             </div>
 
             <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" aria-hidden="true" />
               <label htmlFor="course-search" className="sr-only">{t("course.searchCourse")}</label>
-              <Input id="course-search" placeholder={t("course.searchCourse")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-10 rounded-xl border-border" />
+              <JcInput id="course-search" placeholder={t("course.searchCourse")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
             </div>
+
 
             {isLoading ? (
               <div className="flex justify-center py-16"><span className="h-6 w-6 border-2 border-foreground/30 border-t-foreground rounded-full animate-spin" role="status" aria-label={t("common.loading", "로딩 중")} /></div>
@@ -212,10 +223,11 @@ const StudentCourses = () => {
 
           <TabsContent value="completed" className="mt-0 space-y-4">
             <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" aria-hidden="true" />
               <label htmlFor="course-search-completed" className="sr-only">{t("course.searchCourse")}</label>
-              <Input id="course-search-completed" placeholder={t("course.searchCourse")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-10 rounded-xl border-border" />
+              <JcInput id="course-search-completed" placeholder={t("course.searchCourse")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
             </div>
+
 
             {isLoading ? (
               <div className="flex justify-center py-16"><span className="h-6 w-6 border-2 border-foreground/30 border-t-foreground rounded-full animate-spin" role="status" aria-label={t("common.loading", "로딩 중")} /></div>

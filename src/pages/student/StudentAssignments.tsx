@@ -13,6 +13,13 @@ import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import RichStatCard from "@/components/admin/stats/RichStatCard";
+import {
+  Button as JcButton,
+  Card as JcCard,
+  Textarea as JcTextarea,
+  PageHeader,
+} from "@/design-system/webheads-class";
+
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = [
@@ -147,10 +154,16 @@ const StudentAssignments = () => {
   return (
     <DashboardLayout role="student">
       <div className="space-y-8">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground flex items-center gap-2"><ClipboardList className="h-6 w-6" aria-hidden="true" />{t("assignments.title")}</h1>
-          <p className="text-sm text-muted-foreground mt-1">{t("assignments.subtitle")}</p>
-        </div>
+        <PageHeader
+          title={
+            <span className="inline-flex items-center gap-2">
+              <ClipboardList className="h-6 w-6" aria-hidden="true" />
+              {t("assignments.title")}
+            </span>
+          }
+          subtitle={t("assignments.subtitle")}
+        />
+
 
         <section
           className="grid grid-cols-3 gap-2 sm:gap-3"
@@ -196,9 +209,11 @@ const StudentAssignments = () => {
           <div className="space-y-3">
             <h2 className="text-lg font-semibold text-foreground">{t("assignments.unsubmittedAssignments")}</h2>
             {pending.map((assignment: any) => (
-              <div
+              <JcCard
                 key={assignment.id}
-                className="stat-card flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 cursor-pointer group !p-3 sm:!p-4 hover:shadow-md transition-all"
+                variant="flat"
+                className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 cursor-pointer group !p-3 sm:!p-4 hover:shadow-md transition-all"
+
                 onClick={() => { setSubmitTarget(assignment); setSubmissionText(""); setFiles([]); }}
                 role="button"
                 tabIndex={0}
@@ -225,11 +240,12 @@ const StudentAssignments = () => {
                       </p>
                     )}
                   </div>
-                  <Button size="sm" variant="outline" className="rounded-xl text-xs shrink-0 gap-1.5" tabIndex={-1} aria-hidden="true">
+                  <JcButton size="sm" variant="outline" className="shrink-0 gap-1.5" tabIndex={-1} aria-hidden="true">
                     <Send className="h-3 w-3" /> {t("common.submit")}
-                  </Button>
+                  </JcButton>
                 </div>
-              </div>
+              </JcCard>
+
             ))}
           </div>
         )}
@@ -242,9 +258,11 @@ const StudentAssignments = () => {
               const config = statusConfig[sub.status as keyof typeof statusConfig] || statusConfig.submitted;
               const StatusIcon = config.icon;
               return (
-                <div
+                <JcCard
                   key={sub.id}
-                  className="stat-card flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 cursor-pointer group !p-3 sm:!p-4 hover:shadow-md transition-all"
+                  variant="flat"
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 cursor-pointer group !p-3 sm:!p-4 hover:shadow-md transition-all"
+
                   onClick={() => setViewTarget(sub)}
                   role="button"
                   tabIndex={0}
@@ -275,7 +293,8 @@ const StudentAssignments = () => {
                     </div>
                     <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
                   </div>
-                </div>
+                </JcCard>
+
               );
             })}
           </div>
@@ -311,12 +330,13 @@ const StudentAssignments = () => {
               )}
               <div className="space-y-2">
                 <Label className="text-sm font-medium">{t("assignments.submissionText")} *</Label>
-                <Textarea
+                <JcTextarea
                   value={submissionText}
                   onChange={(e) => setSubmissionText(e.target.value)}
                   placeholder={t("assignments.submissionPlaceholder")}
-                  className="rounded-xl resize-none min-h-[120px]"
+                  className="resize-none min-h-[120px]"
                 />
+
               </div>
               {/* File Upload */}
               <div className="space-y-2">
@@ -332,16 +352,16 @@ const StudentAssignments = () => {
                   onChange={handleFileSelect}
                   className="hidden"
                 />
-                <Button
-                  type="button"
+                <JcButton
                   variant="outline"
                   size="sm"
-                  className="rounded-xl gap-1.5 text-xs"
+                  className="gap-1.5"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={files.length >= 5}
                 >
                   <Paperclip className="h-3 w-3" /> 파일 선택
-                </Button>
+                </JcButton>
+
                 {files.length > 0 && (
                   <div className="space-y-1.5 mt-2">
                     {files.map((f, i) => (
@@ -360,16 +380,17 @@ const StudentAssignments = () => {
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setSubmitTarget(null)} className="rounded-xl">{t("common.cancel")}</Button>
-            <Button
+            <JcButton variant="outline" onClick={() => setSubmitTarget(null)}>{t("common.cancel")}</JcButton>
+            <JcButton
               onClick={() => submitMutation.mutate()}
               disabled={submitMutation.isPending || uploading || (!submissionText.trim() && files.length === 0)}
-              className="rounded-xl gap-1.5"
+              className="gap-1.5"
             >
               <Send className="h-3.5 w-3.5" />
               {uploading ? "업로드 중..." : submitMutation.isPending ? t("assignments.submitting") : t("common.submit")}
-            </Button>
+            </JcButton>
           </DialogFooter>
+
         </DialogContent>
       </Dialog>
 
