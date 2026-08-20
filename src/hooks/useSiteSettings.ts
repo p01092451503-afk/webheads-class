@@ -12,7 +12,11 @@ export interface SiteSettings {
   company_phone: string | null;
   company_email: string | null;
   business_number: string | null;
+  mail_order_number: string | null;
+  fax_number: string | null;
+  postal_code: string | null;
   ceo_name: string | null;
+
   hours_weekday: string | null;
   hours_weekend: string | null;
   hours_lunch: string | null;
