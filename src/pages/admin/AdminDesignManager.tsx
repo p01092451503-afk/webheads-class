@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { LayoutTemplate, Plus, Pencil, Trash2, ArrowUp, ArrowDown, Upload, X, ImageIcon, Loader2 } from "lucide-react";
+import { LayoutTemplate, Plus, Pencil, Trash2, ArrowUp, ArrowDown, Upload, X, ImageIcon, Loader2, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
