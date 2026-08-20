@@ -196,9 +196,11 @@ const StudentAssignments = () => {
           <div className="space-y-3">
             <h2 className="text-lg font-semibold text-foreground">{t("assignments.unsubmittedAssignments")}</h2>
             {pending.map((assignment: any) => (
-              <div
+              <JcCard
                 key={assignment.id}
-                className="stat-card flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 cursor-pointer group !p-3 sm:!p-4 hover:shadow-md transition-all"
+                variant="flat"
+                className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 cursor-pointer group !p-3 sm:!p-4 hover:shadow-md transition-all"
+
                 onClick={() => { setSubmitTarget(assignment); setSubmissionText(""); setFiles([]); }}
                 role="button"
                 tabIndex={0}
