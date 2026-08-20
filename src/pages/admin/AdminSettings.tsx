@@ -566,6 +566,15 @@ const AdminSettings = () => {
                   <label className="text-sm text-foreground">{t("admin.completionNotif")}</label>
                   <Switch checked={form.notify_completion} onCheckedChange={(v) => setForm({ ...form, notify_completion: v })} />
                 </div>
+                <div className="flex items-center justify-between">
+                  <label className="text-sm text-foreground">{t("admin.purchaseNotif", "구매·결제 알림")}</label>
+                  <Switch checked={form.notify_purchase} onCheckedChange={(v) => setForm({ ...form, notify_purchase: v })} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <label className="text-sm text-foreground">{t("admin.inquiryNotif", "문의글 등록 알림")}</label>
+                  <Switch checked={form.notify_inquiry} onCheckedChange={(v) => setForm({ ...form, notify_inquiry: v })} />
+                </div>
+
               </div>
             </div>
 
