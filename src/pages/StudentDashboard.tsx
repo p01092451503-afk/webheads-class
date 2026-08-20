@@ -807,7 +807,9 @@ const StudentDashboard = () => {
               </div>
             );
           })()}
-        </div>
+          </CardBody>
+        </JcCard>
+
 
         {/* 학습 통계 + 추천 강의 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
