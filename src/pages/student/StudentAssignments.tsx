@@ -242,9 +242,11 @@ const StudentAssignments = () => {
               const config = statusConfig[sub.status as keyof typeof statusConfig] || statusConfig.submitted;
               const StatusIcon = config.icon;
               return (
-                <div
+                <JcCard
                   key={sub.id}
-                  className="stat-card flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 cursor-pointer group !p-3 sm:!p-4 hover:shadow-md transition-all"
+                  variant="flat"
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 cursor-pointer group !p-3 sm:!p-4 hover:shadow-md transition-all"
+
                   onClick={() => setViewTarget(sub)}
                   role="button"
                   tabIndex={0}
