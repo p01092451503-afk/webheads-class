@@ -332,16 +332,16 @@ const StudentAssignments = () => {
                   onChange={handleFileSelect}
                   className="hidden"
                 />
-                <Button
-                  type="button"
+                <JcButton
                   variant="outline"
                   size="sm"
-                  className="rounded-xl gap-1.5 text-xs"
+                  className="gap-1.5"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={files.length >= 5}
                 >
                   <Paperclip className="h-3 w-3" /> 파일 선택
-                </Button>
+                </JcButton>
+
                 {files.length > 0 && (
                   <div className="space-y-1.5 mt-2">
                     {files.map((f, i) => (
