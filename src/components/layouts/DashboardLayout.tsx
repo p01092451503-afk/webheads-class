@@ -951,12 +951,15 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
           </div>
         </header>
         <main
-          className={contentClassName || "flex-1 min-w-0 p-4 sm:p-6 lg:p-8"}
+          className={`${contentClassName || "flex-1 min-w-0 p-4 sm:p-6 lg:p-8"}${
+            effectiveRole === "student" || effectiveRole === "teacher" ? " jc-scope" : ""
+          }`}
           style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
           role="main"
         >
           {children}
         </main>
+
       </div>
 
       {/* Show real-user Web Vitals only on admin pages */}

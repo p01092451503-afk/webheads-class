@@ -1,0 +1,231 @@
+/**
+ * 웹헤즈 CLASS design tokens.
+ * Derived from the LMS mockups (dashboard, notice, community, FAQ).
+ * Import this file once; every component reads from these variables.
+ */
+:root {
+  /* ── Brand ── */
+  --jc-color-navy: #263f64;
+  --jc-color-navy-strong: #1c2b3a;
+  --jc-color-navy-deep: #07456b;
+  --jc-color-navy-link: #0d5b8b;
+  --jc-color-orange: #db7000;
+  --jc-color-orange-light: #f08b16;
+  --jc-color-highlight-bg: #ffe08a;
+  --jc-color-highlight-text: #4a2c00;
+
+  /* ── Text ── */
+  --jc-color-text: #1c2b3a;
+  --jc-color-text-strong: #263f64;
+  --jc-color-text-muted: #767676;
+  --jc-color-text-subtle: #a0a9b4;
+  --jc-color-text-placeholder: #b0b8c4;
+  --jc-color-text-inverse: #ffffff;
+
+  /* ── Surfaces ── */
+  --jc-color-bg: #f5f7fb;
+  --jc-color-surface: #ffffff;
+  --jc-color-surface-muted: #fafbfc;
+  --jc-color-surface-sunken: #f0f2f5;
+  --jc-color-surface-accent: #eef2f8;
+  --jc-color-surface-warm: #fff5e8;
+
+  /* ── Skeleton (loading placeholders) ── */
+  --jc-color-skeleton: #e8ecf2;
+  --jc-color-skeleton-shine: #f6f8fc;
+  --jc-skeleton-duration: 1.4s;
+
+  /* ── Borders ── */
+  --jc-color-border: #e5e8ed;
+  --jc-color-border-soft: #f0f2f6;
+  --jc-color-border-strong: #b8bec8;
+
+  /* ── Status ── */
+  --jc-color-success: #10b981;
+  --jc-color-success-bg: #ecfdf5;
+  --jc-color-info: #3b82f6;
+  --jc-color-info-bg: #ebf3ff;
+  --jc-color-warning: #db7000;
+  --jc-color-warning-bg: #fff3e8;
+  --jc-color-danger: #e53e3e;
+  --jc-color-danger-bg: #fdecec;
+  --jc-color-danger-strong: #e03535;
+
+  /* ── Typography ── */
+  --jc-font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, -apple-system, sans-serif;
+  --jc-font-family-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --jc-font-size-2xs: 11px;
+  --jc-font-size-xs: 12px;
+  --jc-font-size-sm: 13px;
+  --jc-font-size-base: 14px;
+  --jc-font-size-md: 15px;
+  --jc-font-size-lg: 16px;
+  --jc-font-size-xl: 18px;
+  --jc-font-size-2xl: 20px;
+  --jc-font-size-3xl: 24px;
+  --jc-font-size-4xl: 32px;
+  --jc-font-weight-regular: 500;
+  --jc-font-weight-medium: 600;
+  --jc-font-weight-bold: 700;
+  --jc-font-weight-black: 800;
+  --jc-line-height: 1.5;
+  --jc-line-height-tight: 1.2;   /* display / page titles */
+  --jc-line-height-snug: 1.35;   /* card + item titles */
+  --jc-line-height-control: 1;   /* single-line controls (button, input) */
+  --jc-line-height-relaxed: 1.7; /* long-form paragraphs */
+  --jc-letter-spacing: -0.025em;
+  --jc-letter-spacing-tight: -0.04em;
+
+  /* ── Spacing ── */
+  --jc-space-1: 4px;
+  --jc-space-2: 8px;
+  --jc-space-3: 12px;
+  --jc-space-4: 16px;
+  --jc-space-5: 20px;
+  --jc-space-6: 24px;
+  --jc-space-8: 32px;
+
+  /* ── Radius ── */
+  --jc-radius-xs: 6px;
+  --jc-radius-sm: 8px;
+  --jc-radius-md: 10px;
+  --jc-radius-lg: 12px;
+  --jc-radius-xl: 16px;
+  --jc-radius-pill: 50px;
+  --jc-radius-round: 50%;
+
+  /* ── Shadow ── */
+  --jc-shadow-card: 10px 10px 30px rgba(0, 0, 0, 0.06);
+  --jc-shadow-soft: 0 2px 16px rgba(20, 30, 50, 0.04);
+  --jc-shadow-popover: 0 4px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --jc-shadow-modal: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 24px 80px rgba(0, 0, 0, 0.18);
+
+  /* ── Motion ── */
+  --jc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --jc-duration-fast: 0.17s;
+  --jc-duration: 0.2s;
+  --jc-duration-slow: 0.3s;
+
+  /* ── Control heights ── */
+  --jc-control-height-sm: 36px;
+  --jc-control-height-md: 44px;
+  --jc-control-height-lg: 46px;
+}
+
+/**
+ * Theme variants.
+ * Set `data-jc-theme="dark" | "contrast"` on <html>, <body> or any wrapper
+ * element to re-map the palette tokens below. Every component reads these
+ * variables, so nothing else needs to change.
+ */
+[data-jc-theme="dark"] {
+  /* ── Brand ── */
+  --jc-color-navy: #7ea6dc;
+  --jc-color-navy-strong: #a9c6ea;
+  --jc-color-navy-deep: #5f9ec4;
+  --jc-color-navy-link: #8ec2e8;
+  --jc-color-orange: #f59a3c;
+  --jc-color-orange-light: #ffb45f;
+  --jc-color-highlight-bg: #6a4a12;
+  --jc-color-highlight-text: #ffe8bf;
+
+  /* ── Text ── */
+  --jc-color-text: #e6ebf3;
+  --jc-color-text-strong: #ffffff;
+  --jc-color-text-muted: #a3adbd;
+  --jc-color-text-subtle: #7d879a;
+  --jc-color-text-placeholder: #6b7688;
+  --jc-color-text-inverse: #101725;
+
+  /* ── Surfaces ── */
+  --jc-color-bg: #0d1320;
+  --jc-color-surface: #151d2e;
+  --jc-color-surface-muted: #182134;
+  --jc-color-surface-sunken: #1d283c;
+  --jc-color-surface-accent: #1e2e47;
+  --jc-color-surface-warm: #33240f;
+
+  /* ── Skeleton (loading placeholders) ── */
+  --jc-color-skeleton: #2a3549;
+  --jc-color-skeleton-shine: #3a4660;
+
+  /* ── Borders ── */
+  --jc-color-border: #2a3549;
+  --jc-color-border-soft: #212b3d;
+  --jc-color-border-strong: #46536b;
+
+  /* ── Status ── */
+  --jc-color-success: #34d399;
+  --jc-color-success-bg: #10291f;
+  --jc-color-info: #60a5fa;
+  --jc-color-info-bg: #142338;
+  --jc-color-warning: #fbaa4a;
+  --jc-color-warning-bg: #33240f;
+  --jc-color-danger: #f87171;
+  --jc-color-danger-bg: #351a1a;
+  --jc-color-danger-strong: #fb8686;
+
+  /* ── Shadow (deeper, cooler on dark surfaces) ── */
+  --jc-shadow-card: 10px 10px 30px rgba(0, 0, 0, 0.45);
+  --jc-shadow-soft: 0 2px 16px rgba(0, 0, 0, 0.35);
+  --jc-shadow-popover: 0 4px 24px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --jc-shadow-modal: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 24px 80px rgba(0, 0, 0, 0.65);
+
+  color-scheme: dark;
+}
+
+[data-jc-theme="contrast"] {
+  /* ── Brand ── */
+  --jc-color-navy: #00204d;
+  --jc-color-navy-strong: #000000;
+  --jc-color-navy-deep: #00204d;
+  --jc-color-navy-link: #003ea6;
+  --jc-color-orange: #8a3b00;
+  --jc-color-orange-light: #a34600;
+  --jc-color-highlight-bg: #ffe600;
+  --jc-color-highlight-text: #000000;
+
+  /* ── Text ── */
+  --jc-color-text: #000000;
+  --jc-color-text-strong: #000000;
+  --jc-color-text-muted: #333333;
+  --jc-color-text-subtle: #4a4a4a;
+  --jc-color-text-placeholder: #595959;
+  --jc-color-text-inverse: #ffffff;
+
+  /* ── Surfaces ── */
+  --jc-color-bg: #ffffff;
+  --jc-color-surface: #ffffff;
+  --jc-color-surface-muted: #ffffff;
+  --jc-color-surface-sunken: #f0f0f0;
+  --jc-color-surface-accent: #e4ecfa;
+  --jc-color-surface-warm: #fdf0e0;
+
+  /* ── Skeleton (loading placeholders) ── */
+  --jc-color-skeleton: #d0d0d0;
+  --jc-color-skeleton-shine: #f0f0f0;
+
+  /* ── Borders ── */
+  --jc-color-border: #000000;
+  --jc-color-border-soft: #333333;
+  --jc-color-border-strong: #000000;
+
+  /* ── Status ── */
+  --jc-color-success: #005c3c;
+  --jc-color-success-bg: #e2f4ec;
+  --jc-color-info: #003ea6;
+  --jc-color-info-bg: #e4ecfa;
+  --jc-color-warning: #8a3b00;
+  --jc-color-warning-bg: #fdf0e0;
+  --jc-color-danger: #a30010;
+  --jc-color-danger-bg: #fbe6e8;
+  --jc-color-danger-strong: #8a000d;
+
+  /* ── Shadow (flat: contrast comes from borders, not elevation) ── */
+  --jc-shadow-card: 0 0 0 1px #000000;
+  --jc-shadow-soft: 0 0 0 1px #000000;
+  --jc-shadow-popover: 0 0 0 2px #000000;
+  --jc-shadow-modal: 0 0 0 2px #000000;
+
+  color-scheme: light;
+}

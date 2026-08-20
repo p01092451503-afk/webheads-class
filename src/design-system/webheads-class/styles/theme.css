@@ -1,0 +1,24 @@
+/**
+ * 웹헤즈 CLASS theme entry point.
+ * Consumers import THIS one file to receive the full design system:
+ *   import "@/design-system/webheads-class/styles/theme.css";
+ *
+ * NOTE: 이 프로젝트는 Tailwind preflight를 이미 사용하므로, 라이브러리의
+ * 전역 리셋(*, a, img)과 body 폰트 지정은 제거하고 `.jc-scope` 래퍼로
+ * 범위를 한정했습니다. 학습자/강사 화면에만 적용됩니다.
+ */
+@import "./tokens.css";
+@import "./components.css";
+
+.jc-scope {
+  font-family: var(--jc-font-family);
+  color: var(--jc-color-text-strong);
+  line-height: var(--jc-line-height);
+  letter-spacing: var(--jc-letter-spacing);
+  -webkit-font-smoothing: antialiased;
+}
+
+.jc-scope a {
+  color: inherit;
+  text-decoration: none;
+}
