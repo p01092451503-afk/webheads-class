@@ -2,6 +2,8 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./i18n";
 import "./index.css";
+import "@/design-system/webheads-class/styles/theme.css";
+
 import { initPerfReporter } from "./lib/perfReporter";
 import { enforceCanonicalDomain } from "./lib/canonicalDomain";
 
