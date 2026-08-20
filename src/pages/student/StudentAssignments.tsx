@@ -360,16 +360,17 @@ const StudentAssignments = () => {
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setSubmitTarget(null)} className="rounded-xl">{t("common.cancel")}</Button>
-            <Button
+            <JcButton variant="outline" onClick={() => setSubmitTarget(null)}>{t("common.cancel")}</JcButton>
+            <JcButton
               onClick={() => submitMutation.mutate()}
               disabled={submitMutation.isPending || uploading || (!submissionText.trim() && files.length === 0)}
-              className="rounded-xl gap-1.5"
+              className="gap-1.5"
             >
               <Send className="h-3.5 w-3.5" />
               {uploading ? "업로드 중..." : submitMutation.isPending ? t("assignments.submitting") : t("common.submit")}
-            </Button>
+            </JcButton>
           </DialogFooter>
+
         </DialogContent>
       </Dialog>
 
