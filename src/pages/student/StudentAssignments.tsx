@@ -311,12 +311,13 @@ const StudentAssignments = () => {
               )}
               <div className="space-y-2">
                 <Label className="text-sm font-medium">{t("assignments.submissionText")} *</Label>
-                <Textarea
+                <JcTextarea
                   value={submissionText}
                   onChange={(e) => setSubmissionText(e.target.value)}
                   placeholder={t("assignments.submissionPlaceholder")}
-                  className="rounded-xl resize-none min-h-[120px]"
+                  className="resize-none min-h-[120px]"
                 />
+
               </div>
               {/* File Upload */}
               <div className="space-y-2">
