@@ -197,7 +197,7 @@ const BulkStaffUploadDialog = ({ open, onOpenChange, departments, onCompleted, t
     let success = 0, fail = 0;
     const updated = [...rows];
 
-    for (const row of queue) {
+    const createOne = async (row: any) => {
       const idx = updated.findIndex((r) => r.rowIndex === row.rowIndex);
       try {
         const { data, error } = await supabase.functions.invoke("create-user", {
@@ -224,6 +224,12 @@ const BulkStaffUploadDialog = ({ open, onOpenChange, departments, onCompleted, t
         fail++;
       }
       setProgress((p) => ({ ...p, done: p.done + 1 }));
+    };
+
+    // 5건씩 묶어 병렬 처리 — 수백 건 업로드 시 대기시간을 크게 줄인다.
+    const CHUNK = 5;
+    for (let i = 0; i < queue.length; i += CHUNK) {
+      await Promise.all(queue.slice(i, i + CHUNK).map(createOne));
       setRows([...updated]);
     }
 

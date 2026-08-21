@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { memberSearchOrFilter } from "@/lib/memberSearch";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Video, Plus, Calendar, Users, Trash2, Play, AlertCircle, BookOpen, Search, IdCard } from "lucide-react";
@@ -102,8 +103,8 @@ const VideoSessionsManage = ({ role = "admin" }: { role?: "admin" | "teacher" })
       if (!participantQuery || participantQuery.length < 2) return [];
       const { data } = await supabase
         .from("profiles")
-        .select("user_id, full_name, email")
-        .ilike("full_name", `%${participantQuery}%`)
+        .select("user_id, full_name, email, phone_number, employee_id")
+        .or(memberSearchOrFilter(participantQuery))
         .limit(15);
       return data ?? [];
     },
@@ -115,8 +116,8 @@ const VideoSessionsManage = ({ role = "admin" }: { role?: "admin" | "teacher" })
       if (!idQuery || idQuery.length < 2) return [];
       const { data } = await supabase
         .from("profiles")
-        .select("user_id, full_name, email, employee_id")
-        .or(`email.ilike.%${idQuery}%,employee_id.ilike.%${idQuery}%`)
+        .select("user_id, full_name, email, phone_number, employee_id")
+        .or(memberSearchOrFilter(idQuery))
         .limit(15);
       return data ?? [];
     },

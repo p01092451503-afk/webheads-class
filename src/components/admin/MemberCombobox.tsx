@@ -13,12 +13,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { memberSearchOrFilter, MEMBER_SEARCH_PLACEHOLDER } from "@/lib/memberSearch";
 
 export interface MemberOption {
   user_id: string;
   full_name: string | null;
   email: string | null;
   department?: string | null;
+  phone_number?: string | null;
+  employee_id?: string | null;
 }
 
 interface MemberComboboxProps {
@@ -37,7 +40,7 @@ interface MemberComboboxProps {
 const MemberCombobox = ({
   value,
   onChange,
-  placeholder = "회원 검색 (이름 또는 이메일)",
+  placeholder = MEMBER_SEARCH_PLACEHOLDER,
   className,
   excludeIds = [],
 }: MemberComboboxProps) => {
@@ -55,11 +58,11 @@ const MemberCombobox = ({
     queryFn: async () => {
       let q = supabase
         .from("profiles")
-        .select("user_id, full_name, email, department")
+        .select("user_id, full_name, email, department, phone_number, employee_id")
         .order("full_name")
         .limit(50);
       if (debounced) {
-        q = q.or(`full_name.ilike.%${debounced}%,email.ilike.%${debounced}%`);
+        q = q.or(memberSearchOrFilter(debounced));
       }
       const { data, error } = await q;
       if (error) throw error;
@@ -74,7 +77,7 @@ const MemberCombobox = ({
     queryFn: async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("user_id, full_name, email, department")
+        .select("user_id, full_name, email, department, phone_number, employee_id")
         .eq("user_id", value)
         .maybeSingle();
       return (data as MemberOption) || null;
