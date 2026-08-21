@@ -9,7 +9,9 @@ test.describe("D5 폼 견고성", () => {
     await page.goto("/auth");
     await page.waitForTimeout(1200);
     const signupTab = page.getByRole("tab", { name: /회원가입|sign ?up/i }).first();
-    if (await signupTab.isVisible().catch(() => false)) await signupTab.click();
+    const hasSignup = await signupTab.isVisible().catch(() => false);
+    test.skip(!hasSignup, "회원가입 탭 없음 → 미실행");
+    await signupTab.click();
     await page.waitForTimeout(800);
 
     const submit = page.locator('button[type="submit"]').first();

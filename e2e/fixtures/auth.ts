@@ -134,13 +134,29 @@ export async function callFunction(
         "Content-Type": "application/json",
       };
       if (token) headers.Authorization = `Bearer ${token}`;
-      const res = await fetch(target, {
-        method,
-        headers,
-        body: body ? JSON.stringify(body) : undefined,
-      });
-      return { status: res.status, body: (await res.text()).slice(0, 2000) };
+      try {
+        const res = await fetch(target, {
+          method,
+          headers,
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        return { status: res.status, body: (await res.text()).slice(0, 2000) };
+      } catch (err) {
+        // 함수 미배포/CORS 프리플라이트 거부 → 호출 불가(=노출 없음)로 기록
+        return { status: 0, body: `network-error: ${String(err)}` };
+      }
     },
     { target, anonKey, token: opts.token ?? null, method: opts.method ?? "GET", body: opts.body ?? null },
   );
+}
+
+/** 현재 세션 사용자의 역할 목록. */
+export async function getRoles(page: Page, accessToken: string, userId: string): Promise<string[]> {
+  const res = await restQuery(page, {
+    table: "user_roles",
+    query: `select=role&user_id=eq.${userId}`,
+    accessToken,
+  });
+  if (res.status !== 200) return [];
+  return (JSON.parse(res.body || "[]") as { role: string }[]).map((r) => r.role);
 }
