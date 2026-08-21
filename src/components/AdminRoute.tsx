@@ -40,7 +40,7 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
       return null;
     }
   })();
-  const activeRole = storedRole && roles.includes(storedRole) ? storedRole : null;
+  const activeRole = storedRole && (roles as string[]).includes(storedRole) ? storedRole : null;
   if (activeRole && activeRole !== "admin") {
     const target = activeRole === "teacher" ? "/teacher" : "/student";
     return <Navigate to={target} replace />;
