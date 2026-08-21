@@ -994,6 +994,13 @@ export type Database = {
             foreignKeyName: "beneficiary_students_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
+            referencedRelation: "community_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "beneficiary_students_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
@@ -2797,6 +2804,13 @@ export type Database = {
             foreignKeyName: "course_extensions_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "community_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "course_extensions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
@@ -3114,6 +3128,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "enrollments"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_suspensions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "community_profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "course_suspensions_user_id_fkey"
@@ -4997,6 +5018,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "member_groups"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "member_group_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "community_profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "member_group_members_user_id_fkey"
@@ -7069,6 +7097,13 @@ export type Database = {
             foreignKeyName: "refund_requests_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "community_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "refund_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
@@ -7229,6 +7264,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "community_profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "reviews_user_id_fkey"
@@ -8011,6 +8053,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "surveys"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "survey_responses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "community_profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "survey_responses_user_id_fkey"
@@ -8800,7 +8849,27 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      community_profiles: {
+        Row: {
+          avatar_url: string | null
+          full_name: string | null
+          position: string | null
+          user_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          full_name?: string | null
+          position?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          full_name?: string | null
+          position?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       apply_simple_i18n: {
@@ -9027,6 +9096,10 @@ export type Database = {
       }
       is_correction_assignment_target: {
         Args: { _assignment_id: string }
+        Returns: boolean
+      }
+      is_dept_admin_of: {
+        Args: { _department_id: string; _user_id: string }
         Returns: boolean
       }
       is_video_session_host: {
