@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { memberSearchOrFilter } from "@/lib/memberSearch";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Video, Plus, Calendar, Users, Trash2, Play, AlertCircle, BookOpen, Search, IdCard } from "lucide-react";
