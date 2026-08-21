@@ -94,12 +94,20 @@ const AdminBanners = () => {
     const target = idx + dir;
     if (target < 0 || target >= banners.length) return;
     const a = banners[idx], b = banners[target];
-    await Promise.all([
-      supabase.from("hero_banners").update({ sort_order: b.sort_order }).eq("id", a.id),
-      supabase.from("hero_banners").update({ sort_order: a.sort_order }).eq("id", b.id),
+    // 동일한 sort_order 값이 섞여 있으면 위치가 바뀌지 않으므로 인덱스 기준으로 정규화
+    const orderA = a.sort_order === b.sort_order ? idx : a.sort_order;
+    const orderB = a.sort_order === b.sort_order ? target : b.sort_order;
+    const results = await Promise.all([
+      supabase.from("hero_banners").update({ sort_order: orderB }).eq("id", a.id),
+      supabase.from("hero_banners").update({ sort_order: orderA }).eq("id", b.id),
     ]);
+    const failed = results.find((r) => r.error);
+    if (failed?.error) {
+      toast({ title: "순서 변경 실패", description: failed.error.message, variant: "destructive" });
+    }
     queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
   };
+
 
   const handleUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) return;
