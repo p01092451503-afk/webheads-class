@@ -69,6 +69,18 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Entitlement check — staff, preview content, or approved enrollment only.
+    const access = await checkVideoAccess(userId, `video_url.eq.${media_content_key}`);
+    if (!access.allowed) {
+      console.warn("kollus-token denied:", userId, access.reason);
+      return new Response(JSON.stringify({ error: "Forbidden", reason: access.reason }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+
+
     const KOLLUS_SECURITY_KEY = Deno.env.get("KOLLUS_SECURITY_KEY");
     if (!KOLLUS_SECURITY_KEY) {
       return new Response(JSON.stringify({ error: "KOLLUS_SECURITY_KEY not configured" }), {
