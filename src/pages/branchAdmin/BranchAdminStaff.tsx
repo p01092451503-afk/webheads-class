@@ -13,6 +13,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useBranchAdmin } from "@/hooks/useBranchAdmin";
 import { supabase } from "@/integrations/supabase/client";
+import { matchesMemberQuery, MEMBER_SEARCH_PLACEHOLDER } from "@/lib/memberSearch";
 import { toast } from "@/hooks/use-toast";
 
 const UNASSIGNED = "__unassigned__";
@@ -104,13 +105,7 @@ const BranchAdminStaff = () => {
   const filtered = useMemo(() => {
     if (!search) return staff;
     const s = search.toLowerCase();
-    return staff.filter(
-      (p) =>
-        p.full_name?.toLowerCase().includes(s) ||
-        p.email?.toLowerCase().includes(s) ||
-        p.phone_number?.toLowerCase().includes(s) ||
-        p.employee_id?.toLowerCase().includes(s),
-    );
+    return staff.filter((p) => matchesMemberQuery(p, s));
   }, [staff, search]);
 
   const deptName = (id?: string | null) => {
@@ -225,7 +220,7 @@ const BranchAdminStaff = () => {
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder={t("branchAdminStaff.searchPh", "이름·이메일·연락처 검색")}
+              placeholder={t("branchAdminStaff.searchPh", MEMBER_SEARCH_PLACEHOLDER)}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9"
