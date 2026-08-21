@@ -49,7 +49,12 @@ const AdminUsers = () => {
   const [bulkOpen, setBulkOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ userId: string; name: string } | null>(null);
   const [memberEdit, setMemberEdit] = useState<MemberEditDraft | null>(null);
-  const [newUser, setNewUser] = useState({ name: "", email: "", password: "", phone: "", role: "student" });
+  const EMPTY_NEW_USER = {
+    name: "", email: "", password: "", phone: "", role: "student",
+    departmentId: "__none__", gradeId: "__none__", birthDate: "", gender: "__none__",
+    marketingEmail: false, marketingSms: false, marketingKakao: false,
+  };
+  const [newUser, setNewUser] = useState(EMPTY_NEW_USER);
   const [resetTarget, setResetTarget] = useState<{ userId: string; name: string } | null>(null);
   const [resetPwd, setResetPwd] = useState({ pw: "", confirm: "" });
   const { t, i18n } = useTranslation();
@@ -84,6 +89,14 @@ const AdminUsers = () => {
     },
   });
 
+  const { data: departments = [] } = useQuery({
+    queryKey: ["admin-departments-simple"],
+    queryFn: async () => {
+      const { data } = await supabase.from("departments").select("id, name").order("name");
+      return (data || []) as { id: string; name: string }[];
+    },
+  });
+
   const { data: grades = [] } = useQuery({
     queryKey: ["member-grades"],
     queryFn: async () => {
@@ -101,19 +114,24 @@ const AdminUsers = () => {
           password: newUser.password,
           fullName: newUser.name,
           role: newUser.role,
+          departmentId: newUser.departmentId === "__none__" ? null : newUser.departmentId,
+          phoneNumber: newUser.phone.trim() || null,
+          birthDate: newUser.birthDate || null,
+          gender: newUser.gender === "__none__" ? null : newUser.gender,
+          gradeId: newUser.gradeId === "__none__" ? null : newUser.gradeId,
+          marketingEmail: newUser.marketingEmail,
+          marketingSms: newUser.marketingSms,
+          marketingKakao: newUser.marketingKakao,
         },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      if (newUser.phone.trim()) {
-        await supabase.from("profiles").update({ phone_number: newUser.phone.trim() }).eq("email", newUser.email);
-      }
       return data;
     },
     onSuccess: () => {
       toast.success(t("admin.userCreated"), { description: t("admin.userCreatedDesc", { name: newUser.name }) });
       setAddOpen(false);
-      setNewUser({ name: "", email: "", password: "", phone: "", role: "student" });
+      setNewUser(EMPTY_NEW_USER);
       queryClient.invalidateQueries({ queryKey: ["admin-profiles"] });
       queryClient.invalidateQueries({ queryKey: ["admin-user-roles"] });
     },
@@ -792,7 +810,7 @@ const AdminUsers = () => {
 
       {/* Add User Dialog */}
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t("admin.addUser")}</DialogTitle>
             <DialogDescription>{t("admin.userManagementDesc")}</DialogDescription>
@@ -813,6 +831,67 @@ const AdminUsers = () => {
             <div>
               <Label>휴대폰 번호</Label>
               <Input value={newUser.phone} onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} placeholder="010-0000-0000" className="mt-1" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>생년월일</Label>
+                <Input type="date" value={newUser.birthDate} onChange={(e) => setNewUser({ ...newUser, birthDate: e.target.value })} className="mt-1" />
+              </div>
+              <div>
+                <Label>성별</Label>
+                <Select value={newUser.gender} onValueChange={(v) => setNewUser({ ...newUser, gender: v })}>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder="선택 안 함" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">선택 안 함</SelectItem>
+                    <SelectItem value="male">남성</SelectItem>
+                    <SelectItem value="female">여성</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <Label>소속(지점)</Label>
+              <Select value={newUser.departmentId} onValueChange={(v) => setNewUser({ ...newUser, departmentId: v })}>
+                <SelectTrigger className="mt-1"><SelectValue placeholder="지점 선택" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">미배정</SelectItem>
+                  {departments.map((d) => (
+                    <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {newUser.departmentId === "__none__" && (
+                <p className="text-xs text-muted-foreground mt-1">지점을 지정하지 않으면 지점 관리자 화면에서 조회되지 않습니다.</p>
+              )}
+            </div>
+            <div>
+              <Label>회원등급</Label>
+              <Select value={newUser.gradeId} onValueChange={(v) => setNewUser({ ...newUser, gradeId: v })}>
+                <SelectTrigger className="mt-1"><SelectValue placeholder="등급 선택" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">미지정</SelectItem>
+                  {grades.map((g) => (
+                    <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>마케팅 수신동의</Label>
+              <div className="flex flex-wrap gap-4">
+                <label className="flex items-center gap-2 text-sm">
+                  <Checkbox checked={newUser.marketingEmail} onCheckedChange={(c) => setNewUser({ ...newUser, marketingEmail: !!c })} />
+                  이메일
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <Checkbox checked={newUser.marketingSms} onCheckedChange={(c) => setNewUser({ ...newUser, marketingSms: !!c })} />
+                  SMS
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <Checkbox checked={newUser.marketingKakao} onCheckedChange={(c) => setNewUser({ ...newUser, marketingKakao: !!c })} />
+                  카카오
+                </label>
+              </div>
             </div>
             <div>
               <Label>{t("admin.selectRole")}</Label>
@@ -877,7 +956,7 @@ const AdminUsers = () => {
       <BulkStaffUploadDialog
         open={bulkOpen}
         onOpenChange={setBulkOpen}
-        departments={[]}
+        departments={departments}
         teacherRoleEnabled={teacherRoleEnabled}
         isEn={isEn}
         onCompleted={() => {
