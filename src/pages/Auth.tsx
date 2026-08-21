@@ -40,6 +40,14 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [fullName, setFullName] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [marketingEmail, setMarketingEmail] = useState(false);
+  const [marketingSms, setMarketingSms] = useState(false);
+  const [marketingKakao, setMarketingKakao] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [isResetting, setIsResetting] = useState(false);
@@ -186,6 +194,27 @@ const Auth = () => {
       });
       return;
     }
+
+    if (isSignUp) {
+      const errTitle = t("auth.errorTitleSignUp");
+      if (password !== confirmPassword) {
+        setAuthError({ title: errTitle, message: "비밀번호와 비밀번호 확인이 일치하지 않습니다." });
+        return;
+      }
+      if (!phoneNumber.trim()) {
+        setAuthError({ title: errTitle, message: "휴대폰번호를 입력해 주세요." });
+        return;
+      }
+      if (branches.length > 0 && !selectedBranch) {
+        setAuthError({ title: errTitle, message: "소속 지점을 선택해 주세요." });
+        return;
+      }
+      if (!agreeTerms) {
+        setAuthError({ title: errTitle, message: "이용약관 및 개인정보 수집·이용에 동의해 주세요." });
+        return;
+      }
+    }
+
     setIsLoading(true);
 
     try {
@@ -193,10 +222,23 @@ const Auth = () => {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { name: fullName, department_id: selectedBranch || undefined } },
+          options: {
+            data: {
+              name: fullName,
+              full_name: fullName,
+              department_id: selectedBranch || undefined,
+              phone_number: phoneNumber.trim() || undefined,
+              birth_date: birthDate || undefined,
+              gender: gender || undefined,
+              marketing_email: marketingEmail,
+              marketing_sms: marketingSms,
+              marketing_kakao: marketingKakao,
+            },
+          },
         });
         if (error) throw error;
         toast({ title: t("auth.signUpComplete"), description: t("auth.checkEmail") });
+
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -271,7 +313,7 @@ const Auth = () => {
            * - error  : reuse the same slot with destructive tone for consistent feedback
            * - success: page navigates away, no banner needed
            */}
-          {!isSignUp && !isLoading && authError && (
+          {!isLoading && authError && (
             <div
               role="alert"
               aria-live="assertive"
@@ -299,8 +341,8 @@ const Auth = () => {
               )}
               {isSignUp && branches.length > 0 && (
                 <div className="space-y-2">
-                  <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("auth.branch")}</label>
-                  <select value={selectedBranch} onChange={(e) => setSelectedBranch(e.target.value)} className="flex h-12 w-full rounded-xl border border-border bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20">
+                  <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("auth.branch")} *</label>
+                  <select value={selectedBranch} onChange={(e) => setSelectedBranch(e.target.value)} required className="flex h-12 w-full rounded-xl border border-border bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20">
                     <option value="">{t("auth.selectBranch")}</option>
                     {branches.map((b: any) => (
                       <option key={b.id} value={b.id}>{b.name}</option>
@@ -308,6 +350,49 @@ const Auth = () => {
                   </select>
                 </div>
               )}
+              {isSignUp && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">휴대폰번호 *</label>
+                    <Input
+                      type="tel"
+                      name="tel"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      placeholder="010-1234-5678"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      className="h-12 bg-white border border-border rounded-xl text-sm placeholder:text-muted-foreground/50 focus-visible:ring-1 focus-visible:ring-foreground/20"
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">생년월일</label>
+                      <Input
+                        type="date"
+                        value={birthDate}
+                        onChange={(e) => setBirthDate(e.target.value)}
+                        className="h-12 bg-white border border-border rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-foreground/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">성별</label>
+                      <select
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                        className="flex h-12 w-full rounded-xl border border-border bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20"
+                      >
+                        <option value="">선택 안 함</option>
+                        <option value="male">남성</option>
+                        <option value="female">여성</option>
+                        <option value="other">기타</option>
+                      </select>
+                    </div>
+                  </div>
+                </>
+              )}
+
               <div className="space-y-2">
                 <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("auth.email")}</label>
                 <div className="relative">
@@ -350,7 +435,53 @@ const Auth = () => {
                   </button>
                 </div>
               </div>
+              {isSignUp && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">비밀번호 확인 *</label>
+                    <div className="relative">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="new-password"
+                        placeholder="비밀번호를 다시 입력하세요"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="h-12 pl-11 bg-white border border-border rounded-xl text-sm placeholder:text-muted-foreground/50 focus-visible:ring-1 focus-visible:ring-foreground/20"
+                        required
+                        minLength={6}
+                      />
+                    </div>
+                    {confirmPassword && password !== confirmPassword && (
+                      <p className="text-xs text-destructive">비밀번호가 일치하지 않습니다.</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2.5 rounded-xl border border-border p-4">
+                    <label className="flex items-start gap-2.5 cursor-pointer">
+                      <input type="checkbox" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-border" />
+                      <span className="text-sm text-foreground">
+                        <strong>(필수)</strong> 이용약관 및 개인정보 수집·이용에 동의합니다.
+                      </span>
+                    </label>
+                    <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase pt-1">마케팅 수신 동의 (선택)</p>
+                    <label className="flex items-center gap-2.5 cursor-pointer">
+                      <input type="checkbox" checked={marketingEmail} onChange={(e) => setMarketingEmail(e.target.checked)} className="h-4 w-4 rounded border-border" />
+                      <span className="text-sm text-muted-foreground">이메일 수신</span>
+                    </label>
+                    <label className="flex items-center gap-2.5 cursor-pointer">
+                      <input type="checkbox" checked={marketingSms} onChange={(e) => setMarketingSms(e.target.checked)} className="h-4 w-4 rounded border-border" />
+                      <span className="text-sm text-muted-foreground">SMS 수신</span>
+                    </label>
+                    <label className="flex items-center gap-2.5 cursor-pointer">
+                      <input type="checkbox" checked={marketingKakao} onChange={(e) => setMarketingKakao(e.target.checked)} className="h-4 w-4 rounded border-border" />
+                      <span className="text-sm text-muted-foreground">카카오 알림톡 수신</span>
+                    </label>
+                  </div>
+                </>
+              )}
             </div>
+
 
             {!isSignUp && (
               <div className="flex items-center justify-between">

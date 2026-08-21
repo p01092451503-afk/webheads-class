@@ -4,6 +4,7 @@
 // The iframe URL: https://iframe.mediadelivery.net/embed/{LIBRARY_ID}/{VIDEO_GUID}?token=...&expires=...
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { checkVideoAccess } from "../_shared/videoAccess.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -65,9 +66,25 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Entitlement check — the requester must be staff, the content must be a
+    // preview, or the requester must have an approved enrollment.
+    const userId = claimsData.claims.sub as string;
+    const access = await checkVideoAccess(
+      userId,
+      `bunny_video_guid.eq.${video_guid},video_url.eq.bunny://${video_guid},video_url.eq.${video_guid}`,
+    );
+    if (!access.allowed) {
+      console.warn("bunny-stream-token denied:", userId, access.reason);
+      return new Response(JSON.stringify({ error: "Forbidden", reason: access.reason }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // 1 hour expiry (shorter window = harder to share/reuse the link)
     const expires = Math.floor(Date.now() / 1000) + 3600;
     const token = await sha256Hex(`${BUNNY_TOKEN_KEY}${video_guid}${expires}`);
+
 
     // Only return the signed iframe embed URL. Do NOT expose the direct HLS (.m3u8) URL —
     // browser download extensions (video-downloader-for-chrome, 4saved, etc.) hook

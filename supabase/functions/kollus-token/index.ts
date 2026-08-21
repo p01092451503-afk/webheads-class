@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js/cors";
+import { checkVideoAccess } from "../_shared/videoAccess.ts";
 
 // Minimal HMAC-SHA256 JWT signing using Web Crypto
 async function createJWT(payload: Record<string, unknown>, secret: string): Promise<string> {
@@ -67,6 +68,18 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Entitlement check — staff, preview content, or approved enrollment only.
+    const access = await checkVideoAccess(userId, `video_url.eq.${media_content_key}`);
+    if (!access.allowed) {
+      console.warn("kollus-token denied:", userId, access.reason);
+      return new Response(JSON.stringify({ error: "Forbidden", reason: access.reason }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+
 
     const KOLLUS_SECURITY_KEY = Deno.env.get("KOLLUS_SECURITY_KEY");
     if (!KOLLUS_SECURITY_KEY) {
