@@ -313,7 +313,7 @@ const Auth = () => {
            * - error  : reuse the same slot with destructive tone for consistent feedback
            * - success: page navigates away, no banner needed
            */}
-          {!isSignUp && !isLoading && authError && (
+          {!isLoading && authError && (
             <div
               role="alert"
               aria-live="assertive"
