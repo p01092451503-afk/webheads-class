@@ -5,6 +5,7 @@ import { Users, TrendingUp, AlertTriangle, CheckCircle, BarChart3 } from "lucide
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
+import { useUserRole } from "@/hooks/useUserRole";
 import { Link } from "react-router-dom";
 import { ChartFallback } from "@/components/PageSkeletons";
 
@@ -15,6 +16,9 @@ const DeptCompletionChart = lazy(() => import("@/components/charts/DeptCompletio
 const DeptAdminDashboard = () => {
   const { t, i18n } = useTranslation();
   const { user } = useUser();
+  const { isAdmin, isTeacher } = useUserRole();
+  // 부서 관리자는 본인 실제 역할 기준 사이드바를 사용한다(관리자 메뉴 노출 방지).
+  const layoutRole = isAdmin ? "admin" : isTeacher ? "teacher" : "student";
   const isEn = i18n.language?.startsWith("en");
 
   // Get current user's department
@@ -126,7 +130,7 @@ const DeptAdminDashboard = () => {
   });
 
   return (
-    <DashboardLayout role="admin">
+    <DashboardLayout role={layoutRole as "student" | "teacher" | "admin"}>
       <div className="space-y-8">
         <div>
           <h1 className="text-2xl font-semibold text-foreground flex items-center gap-2">

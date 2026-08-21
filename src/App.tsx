@@ -15,6 +15,7 @@ import { FullScreenSkeleton } from "@/components/PageSkeletons";
 import StorefrontGate from "@/components/StorefrontGate";
 import AppUpdateBanner from "@/components/AppUpdateBanner";
 import RouteReporter from "@/components/RouteReporter";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import FeatureGate from "@/components/ops/FeatureGate";
 
 // Skeleton loading fallback (no spinner)
@@ -145,6 +146,7 @@ const AdminOpsCertificates = lazy(() => import("./pages/admin/ops/AdminOpsCertif
 const AdminOpsStats = lazy(() => import("./pages/admin/ops/AdminOpsStats"));
 const AdminModuleSettings = lazy(() => import("./pages/admin/ops/AdminModuleSettings"));
 const BranchAdminRoute = lazy(() => import("./components/BranchAdminRoute"));
+const DeptAdminRoute = lazy(() => import("./components/DeptAdminRoute"));
 const StudentPrograms = lazy(() => import("./pages/student/StudentPrograms"));
 const StudentCertificates = lazy(() => import("./pages/student/StudentCertificates"));
 const StudentEvidence = lazy(() => import("./pages/student/StudentEvidence"));
@@ -206,6 +208,7 @@ const App = () => (
           <TrafficLogger />
           <RouteReporter />
           <AppUpdateBanner />
+          <ErrorBoundary>
           <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Public Store */}
@@ -385,7 +388,7 @@ const App = () => (
               <Route path="/branch-admin/certificates" element={<BranchAdminRoute><BranchAdminCertificates /></BranchAdminRoute>} />
 
               {/* Dept Admin */}
-              <Route path="/dept-admin" element={<ProtectedRoute><DeptAdminDashboard /></ProtectedRoute>} />
+              <Route path="/dept-admin" element={<DeptAdminRoute><DeptAdminDashboard /></DeptAdminRoute>} />
 
               {/* Course Detail & Content Player (role-based) */}
               <Route path="/admin/courses/:courseId" element={<AdminRoute><CourseDetail /></AdminRoute>} />
@@ -405,6 +408,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </ErrorBoundary>
         </BrowserRouter>
       </TooltipProvider>
       </DemoPresetProvider>

@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { cn } from "../lib/utils";
 
 export interface PaginationProps {
@@ -11,11 +12,14 @@ export interface PaginationProps {
 }
 
 /** Numbered pager for notice, community and FAQ lists. */
-export function Pagination({ page, totalPages, onChange, className }: PaginationProps) {
+export const Pagination = forwardRef<HTMLElement, PaginationProps>(function Pagination(
+  { page, totalPages, onChange, className },
+  ref,
+) {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <nav aria-label="Pagination" className={cn("jc-pagination", className)}>
+    <nav ref={ref} aria-label="Pagination" className={cn("jc-pagination", className)}>
       <button
         type="button"
         className="jc-pagination__btn"
@@ -47,4 +51,4 @@ export function Pagination({ page, totalPages, onChange, className }: Pagination
       </button>
     </nav>
   );
-}
+});
