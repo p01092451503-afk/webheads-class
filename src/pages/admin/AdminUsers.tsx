@@ -92,8 +92,11 @@ const AdminUsers = () => {
   const { data: departments = [] } = useQuery({
     queryKey: ["admin-departments-simple"],
     queryFn: async () => {
-      const { data } = await supabase.from("departments").select("id, name").order("name");
-      return (data || []) as { id: string; name: string }[];
+      const { data } = await supabase
+        .from("departments")
+        .select("id, name, parent_department_id")
+        .order("name");
+      return (data || []) as { id: string; name: string; parent_department_id: string | null }[];
     },
   });
 
