@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { cn } from "../lib/utils";
 
 export type ProgressTone = "navy" | "accent" | "success";
@@ -15,17 +16,14 @@ export interface ProgressBarProps {
 }
 
 /** Course-completion progress indicator. */
-export function ProgressBar({
-  value,
-  label,
-  showValue = true,
-  tone = "navy",
-  className,
-}: ProgressBarProps) {
+export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(function ProgressBar(
+  { value, label, showValue = true, tone = "navy", className },
+  ref,
+) {
   const pct = Math.min(100, Math.max(0, value));
 
   return (
-    <div className={cn("jc-progress", tone !== "navy" && `jc-progress--${tone}`, className)}>
+    <div ref={ref} className={cn("jc-progress", tone !== "navy" && `jc-progress--${tone}`, className)}>
       {label || showValue ? (
         <div className="jc-progress__meta">
           <span>{label}</span>
@@ -44,4 +42,4 @@ export function ProgressBar({
       </div>
     </div>
   );
-}
+});

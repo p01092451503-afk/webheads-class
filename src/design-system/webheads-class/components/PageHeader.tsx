@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { cn } from "../lib/utils";
 
 export interface PageHeaderProps {
@@ -12,9 +12,12 @@ export interface PageHeaderProps {
 }
 
 /** Standard title block at the top of every LMS page. */
-export function PageHeader({ title, subtitle, action, className }: PageHeaderProps) {
+export const PageHeader = forwardRef<HTMLElement, PageHeaderProps>(function PageHeader(
+  { title, subtitle, action, className },
+  ref,
+) {
   return (
-    <header className={cn("jc-page-header", className)}>
+    <header ref={ref} className={cn("jc-page-header", className)}>
       <div>
         <h1 className="jc-page-header__title">{title}</h1>
         {subtitle ? <p className="jc-page-header__subtitle">{subtitle}</p> : null}
@@ -22,4 +25,4 @@ export function PageHeader({ title, subtitle, action, className }: PageHeaderPro
       {action}
     </header>
   );
-}
+});

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { cn } from "../lib/utils";
 
 export interface TabItem {
@@ -21,9 +21,12 @@ export interface TabsProps {
 }
 
 /** Underlined tab bar used across list pages. */
-export function Tabs({ items, value, onChange, className }: TabsProps) {
+export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
+  { items, value, onChange, className },
+  ref,
+) {
   return (
-    <div role="tablist" className={cn("jc-tabs", className)}>
+    <div ref={ref} role="tablist" className={cn("jc-tabs", className)}>
       {items.map((item) => {
         const active = item.id === value;
         return (
@@ -44,4 +47,4 @@ export function Tabs({ items, value, onChange, className }: TabsProps) {
       })}
     </div>
   );
-}
+});
