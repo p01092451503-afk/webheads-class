@@ -31,13 +31,16 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
 
   // Role switcher 활성 역할이 admin이 아닌 경우(student/teacher 모드로 전환)
   // admin 권한이 있더라도 admin 페이지 접근을 차단한다.
-  const activeRole = (() => {
+  // localStorage 값은 UI 전환용 힌트일 뿐이므로, 서버에서 내려온 실제 roles에
+  // 존재하는 역할일 때만 인정한다(로컬 조작으로 권한을 얻을 수 없게 한다).
+  const storedRole = (() => {
     try {
       return localStorage.getItem("nf-active-role");
     } catch {
       return null;
     }
   })();
+  const activeRole = storedRole && roles.includes(storedRole) ? storedRole : null;
   if (activeRole && activeRole !== "admin") {
     const target = activeRole === "teacher" ? "/teacher" : "/student";
     return <Navigate to={target} replace />;
