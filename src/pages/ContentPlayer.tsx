@@ -611,7 +611,12 @@ const ContentPlayer = () => {
   const localDesc = getDescription(currentContent);
   const localVideoUrl = getVideoUrl(currentContent);
   const localProvider = getVideoProvider(currentContent);
-  const embedUrl = getVideoEmbed(localVideoUrl, localProvider);
+  const computedEmbedUrl = getVideoEmbed(localVideoUrl, localProvider);
+  if (currentContent?.id && computedEmbedUrl && frozenEmbedRef.current.key !== currentContent.id) {
+    frozenEmbedRef.current = { key: currentContent.id, url: computedEmbedUrl };
+  }
+  const embedUrl =
+    frozenEmbedRef.current.key === currentContent?.id ? frozenEmbedRef.current.url : computedEmbedUrl;
 
   return (
     <div
