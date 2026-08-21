@@ -194,6 +194,27 @@ const Auth = () => {
       });
       return;
     }
+
+    if (isSignUp) {
+      const errTitle = t("auth.errorTitleSignUp");
+      if (password !== confirmPassword) {
+        setAuthError({ title: errTitle, message: "비밀번호와 비밀번호 확인이 일치하지 않습니다." });
+        return;
+      }
+      if (!phoneNumber.trim()) {
+        setAuthError({ title: errTitle, message: "휴대폰번호를 입력해 주세요." });
+        return;
+      }
+      if (branches.length > 0 && !selectedBranch) {
+        setAuthError({ title: errTitle, message: "소속 지점을 선택해 주세요." });
+        return;
+      }
+      if (!agreeTerms) {
+        setAuthError({ title: errTitle, message: "이용약관 및 개인정보 수집·이용에 동의해 주세요." });
+        return;
+      }
+    }
+
     setIsLoading(true);
 
     try {
@@ -201,10 +222,23 @@ const Auth = () => {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { name: fullName, department_id: selectedBranch || undefined } },
+          options: {
+            data: {
+              name: fullName,
+              full_name: fullName,
+              department_id: selectedBranch || undefined,
+              phone_number: phoneNumber.trim() || undefined,
+              birth_date: birthDate || undefined,
+              gender: gender || undefined,
+              marketing_email: marketingEmail,
+              marketing_sms: marketingSms,
+              marketing_kakao: marketingKakao,
+            },
+          },
         });
         if (error) throw error;
         toast({ title: t("auth.signUpComplete"), description: t("auth.checkEmail") });
+
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
