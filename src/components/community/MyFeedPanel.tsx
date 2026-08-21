@@ -32,10 +32,7 @@ const MyFeedPanel = () => {
     queryKey: ["feed-authors", authorIds.join(",")],
     enabled: authorIds.length > 0,
     queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url")
-        .in("user_id", authorIds);
+      const { data } = await supabase.rpc("get_community_profiles", { _user_ids: authorIds });
       const map: Record<string, any> = {};
       ((data as any[]) || []).forEach((p) => (map[p.user_id] = p));
       return map;

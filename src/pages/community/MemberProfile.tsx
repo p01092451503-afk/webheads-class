@@ -17,12 +17,8 @@ const MemberProfile = () => {
     queryKey: ["member-profile", userId],
     enabled: !!userId,
     queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, position, department")
-        .eq("user_id", userId!)
-        .maybeSingle();
-      return data;
+      const { data } = await supabase.rpc("get_community_profiles", { _user_ids: [userId!] });
+      return ((data as any[]) || [])[0] ?? null;
     },
   });
 

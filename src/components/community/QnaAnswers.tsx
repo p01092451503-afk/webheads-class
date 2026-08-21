@@ -35,11 +35,8 @@ const QnaAnswers = ({ postId, postAuthorId }: Props) => {
     queryKey: ["qna-authors", authorIds],
     enabled: authorIds.length > 0,
     queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, position")
-        .in("user_id", authorIds as string[]);
-      return data || [];
+      const { data } = await supabase.rpc("get_community_profiles", { _user_ids: authorIds as string[] });
+      return (data as any[]) || [];
     },
   });
   const aMap = new Map((authors as any[]).map((a) => [a.user_id, a]));
