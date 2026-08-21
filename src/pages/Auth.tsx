@@ -435,7 +435,53 @@ const Auth = () => {
                   </button>
                 </div>
               </div>
+              {isSignUp && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">비밀번호 확인 *</label>
+                    <div className="relative">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="new-password"
+                        placeholder="비밀번호를 다시 입력하세요"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="h-12 pl-11 bg-white border border-border rounded-xl text-sm placeholder:text-muted-foreground/50 focus-visible:ring-1 focus-visible:ring-foreground/20"
+                        required
+                        minLength={6}
+                      />
+                    </div>
+                    {confirmPassword && password !== confirmPassword && (
+                      <p className="text-xs text-destructive">비밀번호가 일치하지 않습니다.</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2.5 rounded-xl border border-border p-4">
+                    <label className="flex items-start gap-2.5 cursor-pointer">
+                      <input type="checkbox" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-border" />
+                      <span className="text-sm text-foreground">
+                        <strong>(필수)</strong> 이용약관 및 개인정보 수집·이용에 동의합니다.
+                      </span>
+                    </label>
+                    <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase pt-1">마케팅 수신 동의 (선택)</p>
+                    <label className="flex items-center gap-2.5 cursor-pointer">
+                      <input type="checkbox" checked={marketingEmail} onChange={(e) => setMarketingEmail(e.target.checked)} className="h-4 w-4 rounded border-border" />
+                      <span className="text-sm text-muted-foreground">이메일 수신</span>
+                    </label>
+                    <label className="flex items-center gap-2.5 cursor-pointer">
+                      <input type="checkbox" checked={marketingSms} onChange={(e) => setMarketingSms(e.target.checked)} className="h-4 w-4 rounded border-border" />
+                      <span className="text-sm text-muted-foreground">SMS 수신</span>
+                    </label>
+                    <label className="flex items-center gap-2.5 cursor-pointer">
+                      <input type="checkbox" checked={marketingKakao} onChange={(e) => setMarketingKakao(e.target.checked)} className="h-4 w-4 rounded border-border" />
+                      <span className="text-sm text-muted-foreground">카카오 알림톡 수신</span>
+                    </label>
+                  </div>
+                </>
+              )}
             </div>
+
 
             {!isSignUp && (
               <div className="flex items-center justify-between">
