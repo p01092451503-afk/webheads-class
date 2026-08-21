@@ -34,7 +34,8 @@ test.describe("D3 유료 콘텐츠 접근 통제", () => {
     ) as Record<string, unknown>[];
 
     const results: string[] = [];
-    for (const fn of ["bunny-video-token", "kollus-video-token", "daily-join-token"]) {
+    const unreachable: string[] = [];
+    for (const fn of ["bunny-stream-token", "kollus-token", "daily-join-token"]) {
       const res = await callFunction(page, {
         name: fn,
         method: "POST",
@@ -45,14 +46,15 @@ test.describe("D3 유료 콘텐츠 접근 통제", () => {
           content_id: (videos[0]?.content_id as string) ?? "e2e-unknown",
         },
       });
-      if (res.status < 400 && /token|url|jwt/i.test(res.body)) {
+      if (res.status === 0) unreachable.push(fn);
+      else if (res.status < 400 && /token|url|jwt/i.test(res.body)) {
         results.push(`${fn}: 미수강 상태로 토큰 발급됨 (${res.status})`);
       }
     }
     expect(results, `유료 영상 토큰 무단 발급:\n${results.join("\n")}`).toEqual([]);
     test.info().annotations.push({
       type: "note",
-      description: `content_videos 조회 결과 ${videos.length}건 (0건이면 RLS로 차단된 상태)`,
+      description: `${unreachable.length ? `호출 불가(미실행): ${unreachable.join(", ")} / ` : ""}content_videos 조회 결과 ${videos.length}건 (0건이면 RLS로 차단된 상태)`,
     });
   });
 
