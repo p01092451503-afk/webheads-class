@@ -274,6 +274,9 @@ const ContentPlayer = () => {
 
   const videoIframeRef = useRef<HTMLIFrameElement | null>(null);
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
+  // 재생 중 embed URL이 바뀌면 iframe이 리로드되어 화면이 검게 변한다.
+  // 콘텐츠별로 최초 계산된 URL을 고정해 80% 자동완료 시 재생이 끊기지 않게 한다.
+  const frozenEmbedRef = useRef<{ key: string; url: string | null }>({ key: "", url: null });
 
   const handleFullscreen = useCallback(async () => {
     const el = videoContainerRef.current;
