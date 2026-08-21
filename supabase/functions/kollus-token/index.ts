@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js/cors";
+import { checkVideoAccess } from "../_shared/videoAccess.ts";
 
 // Minimal HMAC-SHA256 JWT signing using Web Crypto
 async function createJWT(payload: Record<string, unknown>, secret: string): Promise<string> {
