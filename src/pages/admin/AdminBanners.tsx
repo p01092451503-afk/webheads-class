@@ -37,11 +37,23 @@ const AdminBanners = () => {
 
   const toggleActive = useMutation({
     mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
-      const { error } = await supabase.from("hero_banners").update({ is_active }).eq("id", id);
+      const { data, error } = await supabase
+        .from("hero_banners")
+        .update({ is_active })
+        .eq("id", id)
+        .select("id");
       if (error) throw error;
+      if (!data || data.length === 0) throw new Error("변경 권한이 없거나 배너를 찾을 수 없습니다.");
     },
     onMutate: async ({ id, is_active }) => {
+      await queryClient.cancelQueries({ queryKey: ["admin-banners"] });
+      const previous = queryClient.getQueryData(["admin-banners"]);
       queryClient.setQueryData(["admin-banners"], (old: any[]) => (old || []).map((b) => (b.id === id ? { ...b, is_active } : b)));
+      return { previous };
+    },
+    onError: (e: any, _vars, ctx: any) => {
+      if (ctx?.previous) queryClient.setQueryData(["admin-banners"], ctx.previous);
+      toast({ title: "활성 상태 변경 실패", description: e.message, variant: "destructive" });
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["admin-banners"] }),
   });
@@ -50,8 +62,9 @@ const AdminBanners = () => {
     mutationFn: async (data: BannerForm) => {
       const payload = { title: data.title, subtitle: data.subtitle || null, cta_text: data.cta_text || null, cta_url: data.cta_url || null, image_url: data.image_url, bg_color: data.bg_color || "#1a1a2e", is_active: data.is_active, starts_at: data.starts_at || null, ends_at: data.ends_at || null, sort_order: data.sort_order };
       if (data.id) {
-        const { error } = await supabase.from("hero_banners").update(payload).eq("id", data.id);
+        const { data: rows, error } = await supabase.from("hero_banners").update(payload).eq("id", data.id).select("id");
         if (error) throw error;
+        if (!rows || rows.length === 0) throw new Error("수정 권한이 없습니다.");
       } else {
         const { error } = await supabase.from("hero_banners").insert(payload);
         if (error) throw error;
@@ -62,9 +75,20 @@ const AdminBanners = () => {
   });
 
   const deleteBanner = useMutation({
-    mutationFn: async (id: string) => { const { error } = await supabase.from("hero_banners").delete().eq("id", id); if (error) throw error; },
+    mutationFn: async (id: string) => {
+      const { data, error } = await supabase.from("hero_banners").delete().eq("id", id).select("id");
+      if (error) throw error;
+      if (!data || data.length === 0) throw new Error("삭제 권한이 없거나 배너를 찾을 수 없습니다.");
+    },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin-banners"] }); toast({ title: "배너가 삭제되었습니다." }); },
+    onError: (e: any) => toast({ title: "삭제 실패", description: e.message, variant: "destructive" }),
   });
+
+  const handleDelete = (id: string, title: string) => {
+    if (!window.confirm(`'${title}' 배너를 삭제할까요? 되돌릴 수 없습니다.`)) return;
+    deleteBanner.mutate(id);
+  };
+
 
   const swapOrder = async (idx: number, dir: -1 | 1) => {
     const target = idx + dir;
