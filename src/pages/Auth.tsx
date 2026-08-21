@@ -341,8 +341,8 @@ const Auth = () => {
               )}
               {isSignUp && branches.length > 0 && (
                 <div className="space-y-2">
-                  <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("auth.branch")}</label>
-                  <select value={selectedBranch} onChange={(e) => setSelectedBranch(e.target.value)} className="flex h-12 w-full rounded-xl border border-border bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20">
+                  <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("auth.branch")} *</label>
+                  <select value={selectedBranch} onChange={(e) => setSelectedBranch(e.target.value)} required className="flex h-12 w-full rounded-xl border border-border bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20">
                     <option value="">{t("auth.selectBranch")}</option>
                     {branches.map((b: any) => (
                       <option key={b.id} value={b.id}>{b.name}</option>
@@ -350,6 +350,49 @@ const Auth = () => {
                   </select>
                 </div>
               )}
+              {isSignUp && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">휴대폰번호 *</label>
+                    <Input
+                      type="tel"
+                      name="tel"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      placeholder="010-1234-5678"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      className="h-12 bg-white border border-border rounded-xl text-sm placeholder:text-muted-foreground/50 focus-visible:ring-1 focus-visible:ring-foreground/20"
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">생년월일</label>
+                      <Input
+                        type="date"
+                        value={birthDate}
+                        onChange={(e) => setBirthDate(e.target.value)}
+                        className="h-12 bg-white border border-border rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-foreground/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">성별</label>
+                      <select
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                        className="flex h-12 w-full rounded-xl border border-border bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20"
+                      >
+                        <option value="">선택 안 함</option>
+                        <option value="male">남성</option>
+                        <option value="female">여성</option>
+                        <option value="other">기타</option>
+                      </select>
+                    </div>
+                  </div>
+                </>
+              )}
+
               <div className="space-y-2">
                 <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("auth.email")}</label>
                 <div className="relative">
