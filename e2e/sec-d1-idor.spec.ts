@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { ACCOUNTS, callFunction, getSession, loginAs, restQuery } from "./fixtures/auth";
+import { ACCOUNTS, callFunction, getRoles, getSession, loginAs, restQuery } from "./fixtures/auth";
 
 /**
  * D1 — 권한 우회 / IDOR (CRITICAL)
@@ -20,6 +20,12 @@ test.describe("D1 권한 우회 / IDOR", () => {
   test("D1-1 학생 세션으로 관리자 URL 직접 진입 시 차단", async ({ page }) => {
     test.setTimeout(180_000);
     await loginAs(page, "studentA");
+    const s = await getSession(page);
+    const roles = await getRoles(page, s.accessToken, s.userId);
+    test.skip(
+      roles.some((r) => r !== "student"),
+      `studentA 계정이 학생 전용이 아님(roles=${roles.join(",") || "none"}) → 미실행`,
+    );
 
     const leaks: string[] = [];
     for (const url of ADMIN_URLS) {
@@ -45,6 +51,11 @@ test.describe("D1 권한 우회 / IDOR", () => {
     test.setTimeout(180_000);
     await loginAs(page, "studentA");
     const { accessToken, userId } = await getSession(page);
+    const roles = await getRoles(page, accessToken, userId);
+    test.skip(
+      roles.some((r) => r !== "student"),
+      `studentA 계정이 학생 전용이 아님(roles=${roles.join(",") || "none"}) → 미실행`,
+    );
 
     const tables = [
       { table: "orders", col: "user_id" },
