@@ -1,0 +1,1 @@
+update public.demo_presets set is_active = false where is_active = true;
