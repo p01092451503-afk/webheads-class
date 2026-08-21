@@ -40,11 +40,8 @@ const RankingPanel = () => {
     queryKey: ["ranking-profiles", userIds],
     enabled: userIds.length > 0,
     queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, position")
-        .in("user_id", userIds);
-      return data || [];
+      const { data } = await supabase.rpc("get_community_profiles", { _user_ids: userIds });
+      return (data as any[]) || [];
     },
   });
   const pMap = new Map((profiles as any[]).map((p) => [p.user_id, p]));

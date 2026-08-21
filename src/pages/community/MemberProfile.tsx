@@ -17,12 +17,8 @@ const MemberProfile = () => {
     queryKey: ["member-profile", userId],
     enabled: !!userId,
     queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, position, department")
-        .eq("user_id", userId!)
-        .maybeSingle();
-      return data;
+      const { data } = await supabase.rpc("get_community_profiles", { _user_ids: [userId!] });
+      return ((data as any[]) || [])[0] ?? null;
     },
   });
 
@@ -62,7 +58,7 @@ const MemberProfile = () => {
             <div className="flex-1 min-w-0">
               <div className="text-lg font-semibold">{profile?.full_name || "(이름 없음)"}</div>
               <div className="text-sm text-muted-foreground mt-0.5">
-                {profile?.position || ""} {profile?.department ? `· ${profile.department}` : ""}
+                {(profile as any)?.position || ""}
               </div>
               <div className="mt-2"><UserBadges userId={userId!} /></div>
               <div className="flex items-center gap-4 mt-3 text-sm">

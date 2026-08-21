@@ -54,8 +54,8 @@ const PostDetail = () => {
     queryKey: ["community-post-author", post?.author_id],
     enabled: !!post?.author_id,
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("user_id, full_name, avatar_url, position").eq("user_id", post.author_id).maybeSingle();
-      return data;
+      const { data } = await supabase.rpc("get_community_profiles", { _user_ids: [post.author_id] });
+      return (data as any[])?.[0] ?? null;
     },
   });
 
@@ -85,8 +85,8 @@ const PostDetail = () => {
     queryKey: ["community-post-comment-authors", commentAuthorIds],
     enabled: commentAuthorIds.length > 0,
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", commentAuthorIds);
-      return data || [];
+      const { data } = await supabase.rpc("get_community_profiles", { _user_ids: commentAuthorIds });
+      return (data as any[]) || [];
     },
   });
   const cMap = new Map(commentAuthors.map((p: any) => [p.user_id, p]));

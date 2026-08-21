@@ -8945,6 +8945,15 @@ export type Database = {
           question_type: Database["public"]["Enums"]["question_type"]
         }[]
       }
+      get_community_profiles: {
+        Args: { _user_ids: string[] }
+        Returns: {
+          avatar_url: string
+          full_name: string
+          position: string
+          user_id: string
+        }[]
+      }
       get_i18n_dashboard_stats: {
         Args: never
         Returns: {
@@ -9027,6 +9036,10 @@ export type Database = {
       }
       is_correction_assignment_target: {
         Args: { _assignment_id: string }
+        Returns: boolean
+      }
+      is_dept_admin_of: {
+        Args: { _department_id: string; _user_id: string }
         Returns: boolean
       }
       is_video_session_host: {

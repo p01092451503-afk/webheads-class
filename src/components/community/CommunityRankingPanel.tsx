@@ -35,8 +35,8 @@ const CommunityRankingPanel = () => {
 
       const userIds = Object.keys(score);
       if (userIds.length === 0) return [];
-      const { data: profiles } = await supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", userIds);
-      const pmap = new Map((profiles || []).map((p: any) => [p.user_id, p]));
+      const { data: profiles } = await supabase.rpc("get_community_profiles", { _user_ids: userIds });
+      const pmap = new Map(((profiles as any[]) || []).map((p: any) => [p.user_id, p]));
       return userIds
         .map((uid) => ({ user_id: uid, ...score[uid], profile: pmap.get(uid) as any }))
         .sort((a, b) => b.total - a.total)
