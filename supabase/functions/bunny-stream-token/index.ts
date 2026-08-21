@@ -4,6 +4,7 @@
 // The iframe URL: https://iframe.mediadelivery.net/embed/{LIBRARY_ID}/{VIDEO_GUID}?token=...&expires=...
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { checkVideoAccess } from "../_shared/videoAccess.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
