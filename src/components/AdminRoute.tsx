@@ -31,8 +31,9 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
 
   // Role switcher 활성 역할이 admin이 아닌 경우(student/teacher 모드로 전환)
   // admin 권한이 있더라도 admin 페이지 접근을 차단한다.
-  // localStorage 값은 UI 전환용 힌트일 뿐이므로, 서버에서 내려온 실제 roles에
-  // 존재하는 역할일 때만 인정한다(로컬 조작으로 권한을 얻을 수 없게 한다).
+  // localStorage 값은 "권한 축소"에만 쓰이는 UI 힌트이므로 위험하지 않다.
+  // 단, RoleSwitcher가 제공하는 미리보기 역할(관리자→학습자/강사)과 동일한
+  // 집합만 인정해 임의 문자열로 엉뚱한 경로로 튀지 않게 한다.
   const storedRole = (() => {
     try {
       return localStorage.getItem("nf-active-role");
@@ -40,11 +41,18 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
       return null;
     }
   })();
-  const activeRole = storedRole && (roles as string[]).includes(storedRole) ? storedRole : null;
+  const switchable = new Set<string>(roles.map((r) => (r === "super_admin" ? "admin" : r)));
+  if (switchable.has("admin") || switchable.has("teacher") || switchable.has("branch_admin")) {
+    switchable.add("student");
+  }
+  if (switchable.has("admin")) switchable.add("teacher");
+  const activeRole = storedRole && switchable.has(storedRole) ? storedRole : null;
   if (activeRole && activeRole !== "admin") {
-    const target = activeRole === "teacher" ? "/teacher" : "/student";
+    const target =
+      activeRole === "teacher" ? "/teacher" : activeRole === "branch_admin" ? "/branch-admin" : "/student";
     return <Navigate to={target} replace />;
   }
+
 
   return <>{children}</>;
 };

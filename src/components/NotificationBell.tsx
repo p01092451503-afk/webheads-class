@@ -114,8 +114,8 @@ const NotificationBell = () => {
         onClick={() => setOpen(!open)}
         aria-label={
           unreadCount > 0
-            ? `${t("notification.title")} - ${t("notification.unreadCount", { count: unreadCount })}`
-            : t("notification.title")
+            ? `${t("notification.title", "알림")} - ${t("notification.unreadCount", { count: unreadCount, defaultValue: "읽지 않음 {{count}}건" })}`
+            : t("notification.title", "알림")
         }
         aria-expanded={open}
         aria-haspopup="dialog"
@@ -139,11 +139,11 @@ const NotificationBell = () => {
             className="fixed inset-x-0 top-14 z-50 mx-3 overflow-hidden rounded-xl border border-border bg-popover shadow-lg sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mx-0 sm:mt-2 sm:w-96"
             role="dialog"
             aria-modal="true"
-            aria-label={t("notification.title")}
+            aria-label={t("notification.title", "알림")}
           >
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <h2 className="text-sm font-semibold text-foreground" id="notification-panel-title">
-                {t("notification.title")}
+                {t("notification.title", "알림")}
               </h2>
               <div className="flex items-center gap-2">
                 {unreadCount > 0 && (
@@ -170,7 +170,7 @@ const NotificationBell = () => {
             <ul
               className="max-h-80 divide-y divide-border overflow-y-auto"
               role="list"
-              aria-label={t("notification.title")}
+              aria-label={t("notification.title", "알림")}
             >
               {notifications.length === 0 ? (
                 <li className="py-8 text-center text-sm text-muted-foreground" role="status" aria-live="polite">

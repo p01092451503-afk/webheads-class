@@ -89,7 +89,7 @@ const CourseCard = ({ course, categorySlug, categoryName, studentCount, contentC
                 return (
                   <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
                     <CalendarClock className="h-3 w-3" aria-hidden="true" />
-                    {daysLeft > 0 ? `D-${daysLeft}` : daysLeft === 0 ? "D-Day" : t("student.overdue")}
+                    {daysLeft > 0 ? `D-${daysLeft}` : daysLeft === 0 ? "D-Day" : t("student.overdue", "기한 초과")}
                   </span>
                 );
               })()}

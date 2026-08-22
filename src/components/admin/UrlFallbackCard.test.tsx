@@ -115,17 +115,19 @@ describe("UrlFallbackCard accessibility", () => {
   });
 
   it("calls onDismiss when Escape is pressed inside the card", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    vi.useRealTimers();
+    const user = userEvent.setup();
     const { props } = renderCard();
-    vi.advanceTimersByTime(50);
+    await new Promise((r) => setTimeout(r, 80));
     await user.keyboard("{Escape}");
     expect(props.onDismiss).toHaveBeenCalledTimes(1);
   });
 
   it("Tab on last button loops focus back to first (focus trap)", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    vi.useRealTimers();
+    const user = userEvent.setup();
     renderCard();
-    vi.advanceTimersByTime(50);
+    await new Promise((r) => setTimeout(r, 80));
 
     const retryBtn = screen.getByRole("button", { name: /Retry URL extraction/i });
     const dismissBtn = screen.getByRole("button", { name: /Dismiss the failure notice/i });
@@ -139,9 +141,10 @@ describe("UrlFallbackCard accessibility", () => {
   });
 
   it("Shift+Tab on first button loops focus to last (reverse trap)", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    vi.useRealTimers();
+    const user = userEvent.setup();
     renderCard();
-    vi.advanceTimersByTime(50);
+    await new Promise((r) => setTimeout(r, 80));
 
     const retryBtn = screen.getByRole("button", { name: /Retry URL extraction/i });
     const dismissBtn = screen.getByRole("button", { name: /Dismiss the failure notice/i });
@@ -203,9 +206,10 @@ describe("UrlFallbackCard accessibility", () => {
   });
 
   it("clicking retry triggers onRetry callback", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    vi.useRealTimers();
+    const user = userEvent.setup();
     const { props } = renderCard();
-    vi.advanceTimersByTime(50);
+    await new Promise((r) => setTimeout(r, 80));
     await user.click(screen.getByRole("button", { name: /Retry URL extraction/i }));
     expect(props.onRetry).toHaveBeenCalledTimes(1);
   });
