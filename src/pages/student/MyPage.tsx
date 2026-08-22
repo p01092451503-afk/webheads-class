@@ -376,10 +376,8 @@ const MyPage = ({ defaultTab = "profile" }: { defaultTab?: string }) => {
               <div className="min-w-0 space-y-1">
                 <h2 className="text-xl font-bold text-foreground">{profile?.full_name || t("common.user")}</h2>
                 <p className="text-sm text-muted-foreground truncate">{user?.email}</p>
-                <div className="flex items-center gap-2 flex-wrap">
-                </div>
+              </div>
 
-                </div>
               </div>
             </div>
 
