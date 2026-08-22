@@ -74,8 +74,15 @@ export const useTrafficLogger = () => {
   const lastPath = useRef<string>("");
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      accessToken = data.session?.access_token ?? null;
+    });
+  }, [user?.id]);
+
+  useEffect(() => {
     if (!user?.id || location.pathname === lastPath.current) return;
     lastPath.current = location.pathname;
+
 
     buffer.push({
       user_id: user.id,
