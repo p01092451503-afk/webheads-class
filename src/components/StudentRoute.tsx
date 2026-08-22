@@ -12,9 +12,9 @@ import ProtectedRoute from "@/components/ProtectedRoute";
  */
 const StudentRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useUser();
-  const { isStudent, isTeacher, isAdmin, isLoading: roleLoading } = useUserRole();
+  const { isStudent, isTeacher, isAdmin } = useUserRole();
 
-  if (isLoading || roleLoading) return <FullScreenSkeleton />;
+  if (isLoading) return <FullScreenSkeleton />;
   if (!user) return <Navigate to="/auth" replace />;
   if (!isStudent && !isTeacher && !isAdmin) return <Navigate to="/dashboard" replace />;
 
