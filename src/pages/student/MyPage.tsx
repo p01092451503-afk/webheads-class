@@ -501,42 +501,8 @@ const MyPage = ({ defaultTab = "profile" }: { defaultTab?: string }) => {
                   <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("mypage.phone")}</label>
                   <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="010-0000-0000" className="h-11 rounded-xl border-border" />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("mypage.branch", "소속 지점")}</label>
-                  <Select value={departmentId || "none"} onValueChange={(v) => setDepartmentId(v === "none" ? "" : v)}>
-                    <SelectTrigger className="h-11 rounded-xl border-border">
-                      <SelectValue placeholder={t("auth.selectBranch", "소속 지점을 선택하세요")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">{t("common.noData", "선택 안 함")}</SelectItem>
-                      {branches.map((b: any) => (
-                        <SelectItem key={b.id} value={b.id}>{localizeById(b.id, b.name) || b.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("mypage.position")}</label>
-                    <Input
-                      value={isEn && !positionFocused ? (positionInputLabel || position) : position}
-                      onChange={(e) => setPosition(e.target.value)}
-                      onFocus={() => setPositionFocused(true)}
-                      onBlur={() => setPositionFocused(false)}
-                      className="h-11 rounded-xl border-border"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("mypage.team")}</label>
-                    <Input
-                      value={isEn && !teamFocused ? (teamInputLabel || teamName) : teamName}
-                      onChange={(e) => setTeamName(e.target.value)}
-                      onFocus={() => setTeamFocused(true)}
-                      onBlur={() => setTeamFocused(false)}
-                      className="h-11 rounded-xl border-border"
-                    />
-                  </div>
-                </div>
+              </div>
+
               </div>
               <Button onClick={handleSaveProfile} disabled={isSavingProfile} className="rounded-xl gap-1.5">
                 {isSavingProfile ? t("common.saving") : t("common.save")}
