@@ -503,7 +503,6 @@ const MyPage = ({ defaultTab = "profile" }: { defaultTab?: string }) => {
                 </div>
               </div>
 
-              </div>
               <Button onClick={handleSaveProfile} disabled={isSavingProfile} className="rounded-xl gap-1.5">
                 {isSavingProfile ? t("common.saving") : t("common.save")}
               </Button>
