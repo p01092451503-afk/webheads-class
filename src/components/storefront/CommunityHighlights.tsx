@@ -54,14 +54,21 @@ const CommunityHighlights = () => {
     },
   });
 
+  // 화면에 실제 노출되는 게시글(인기 5 + 최신 6)만 집계해 쿼리 부하를 줄인다.
+  const displayedIds = (() => {
+    const popularIds = [...posts].sort((a, b) => b.view_count - a.view_count).slice(0, 5).map((p) => p.id);
+    const latestIds = posts.slice(0, 6).map((p) => p.id);
+    return [...new Set([...popularIds, ...latestIds])];
+  })();
+
   const { data: stats } = useQuery({
-    queryKey: ["storefront-community-stats", posts.map((p) => p.id)],
-    enabled: posts.length > 0,
+    queryKey: ["storefront-community-stats", displayedIds],
+    enabled: displayedIds.length > 0,
+    staleTime: 5 * 60 * 1000,
     queryFn: async () => {
-      const ids = posts.map((p) => p.id);
       const [likes, comments] = await Promise.all([
-        supabase.from("community_likes").select("post_id").in("post_id", ids),
-        supabase.from("community_comments").select("post_id").in("post_id", ids),
+        supabase.from("community_likes").select("post_id").in("post_id", displayedIds),
+        supabase.from("community_comments").select("post_id").in("post_id", displayedIds),
       ]);
       const lc: Record<string, number> = {};
       const cc: Record<string, number> = {};
@@ -70,6 +77,7 @@ const CommunityHighlights = () => {
       return { likes: lc, comments: cc };
     },
   });
+
 
   const { data: profiles = [] } = useQuery({
     queryKey: ["storefront-community-authors", posts.map((p) => p.author_id)],
