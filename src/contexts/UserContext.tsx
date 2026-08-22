@@ -199,7 +199,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       .from("profiles")
       .select("*")
       .eq("user_id", uid)
-      .single();
+      .maybeSingle();
     if (error) {
       console.error("refreshProfile error:", error);
       return;

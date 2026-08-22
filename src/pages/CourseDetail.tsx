@@ -127,7 +127,7 @@ const CourseDetail = () => {
   const { data: course, isLoading: courseLoading } = useQuery({
     queryKey: ["course", courseId],
     queryFn: async () => {
-      const { data, error } = await supabase.from("courses").select("*").eq("id", courseId!).single();
+      const { data, error } = await supabase.from("courses").select("*").eq("id", courseId!).maybeSingle();
       if (error) throw error;
       return data;
     },

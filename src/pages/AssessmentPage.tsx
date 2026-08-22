@@ -332,7 +332,7 @@ export default function AssessmentPage() {
   const { data: assessment, isLoading: assessmentLoading } = useQuery({
     queryKey: ["assessment-detail", assessmentId],
     queryFn: async () => {
-      const { data, error } = await supabase.from("assessments").select("*").eq("id", assessmentId!).single();
+      const { data, error } = await supabase.from("assessments").select("*").eq("id", assessmentId!).maybeSingle();
       if (error) throw error;
       return data;
     },
