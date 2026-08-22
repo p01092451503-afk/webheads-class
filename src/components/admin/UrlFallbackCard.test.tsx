@@ -115,7 +115,7 @@ describe("UrlFallbackCard accessibility", () => {
   });
 
   it("calls onDismiss when Escape is pressed inside the card", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const user = userEvent.setup({ advanceTimers: (ms: number) => vi.advanceTimersByTime(ms) });
     const { props } = renderCard();
     vi.advanceTimersByTime(50);
     await user.keyboard("{Escape}");
@@ -123,7 +123,7 @@ describe("UrlFallbackCard accessibility", () => {
   });
 
   it("Tab on last button loops focus back to first (focus trap)", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const user = userEvent.setup({ advanceTimers: (ms: number) => vi.advanceTimersByTime(ms) });
     renderCard();
     vi.advanceTimersByTime(50);
 
@@ -139,7 +139,7 @@ describe("UrlFallbackCard accessibility", () => {
   });
 
   it("Shift+Tab on first button loops focus to last (reverse trap)", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const user = userEvent.setup({ advanceTimers: (ms: number) => vi.advanceTimersByTime(ms) });
     renderCard();
     vi.advanceTimersByTime(50);
 
@@ -203,7 +203,7 @@ describe("UrlFallbackCard accessibility", () => {
   });
 
   it("clicking retry triggers onRetry callback", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const user = userEvent.setup({ advanceTimers: (ms: number) => vi.advanceTimersByTime(ms) });
     const { props } = renderCard();
     vi.advanceTimersByTime(50);
     await user.click(screen.getByRole("button", { name: /Retry URL extraction/i }));

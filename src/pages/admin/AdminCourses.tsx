@@ -565,7 +565,7 @@ const AdminCourses = () => {
                             {daysLeft !== null && (
                               <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
                                 <CalendarClock className="h-2.5 w-2.5" />
-                                {daysLeft > 0 ? `D-${daysLeft}` : daysLeft === 0 ? "D-Day" : t("student.overdue")}
+                                {daysLeft > 0 ? `D-${daysLeft}` : daysLeft === 0 ? "D-Day" : t("student.overdue", "기한 초과")}
                               </span>
                             )}
                           </div>
