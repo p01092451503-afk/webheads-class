@@ -169,7 +169,7 @@ const CartPage = () => {
         .select("*")
         .eq("code", couponCode.trim().toUpperCase())
         .eq("is_active", true)
-        .single();
+        .maybeSingle();
 
       if (error || !data) {
         toast({ title: "유효하지 않은 쿠폰 코드입니다.", variant: "destructive" });

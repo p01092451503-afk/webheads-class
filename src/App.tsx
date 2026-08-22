@@ -147,6 +147,7 @@ const AdminOpsStats = lazy(() => import("./pages/admin/ops/AdminOpsStats"));
 const AdminModuleSettings = lazy(() => import("./pages/admin/ops/AdminModuleSettings"));
 const BranchAdminRoute = lazy(() => import("./components/BranchAdminRoute"));
 const DeptAdminRoute = lazy(() => import("./components/DeptAdminRoute"));
+const StudentRoute = lazy(() => import("./components/StudentRoute"));
 const StudentPrograms = lazy(() => import("./pages/student/StudentPrograms"));
 const StudentCertificates = lazy(() => import("./pages/student/StudentCertificates"));
 const StudentEvidence = lazy(() => import("./pages/student/StudentEvidence"));
@@ -240,7 +241,7 @@ const App = () => (
               <Route path="/dashboard" element={<ProtectedRoute><RoleBasedRedirect /></ProtectedRoute>} />
 
               {/* Student */}
-              <Route path="/student" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
+              <Route path="/student" element={<StudentRoute><StudentDashboard /></StudentRoute>} />
               <Route path="/dashboard/courses" element={<ProtectedRoute><StudentCourses /></ProtectedRoute>} />
               <Route path="/dashboard/assignments" element={<ProtectedRoute><StudentAssignments /></ProtectedRoute>} />
               <Route path="/dashboard/achievements" element={<ProtectedRoute><StudentAchievements /></ProtectedRoute>} />
@@ -252,24 +253,24 @@ const App = () => (
               <Route path="/my/coupons" element={<ProtectedRoute><MyPage defaultTab="coupons" /></ProtectedRoute>} />
               <Route path="/my/subscription" element={<ProtectedRoute><MyPage defaultTab="subscription" /></ProtectedRoute>} />
               <Route path="/my/refunds" element={<ProtectedRoute><MyPage defaultTab="refunds" /></ProtectedRoute>} />
-              <Route path="/student/announcements" element={<ProtectedRoute><StudentAnnouncements /></ProtectedRoute>} />
-              <Route path="/student/board" element={<ProtectedRoute><StudentBoard /></ProtectedRoute>} />
-              <Route path="/student/community" element={<ProtectedRoute><StudentCommunity /></ProtectedRoute>} />
+              <Route path="/student/announcements" element={<StudentRoute><StudentAnnouncements /></StudentRoute>} />
+              <Route path="/student/board" element={<StudentRoute><StudentBoard /></StudentRoute>} />
+              <Route path="/student/community" element={<StudentRoute><StudentCommunity /></StudentRoute>} />
               <Route path="/community/feed" element={<ProtectedRoute><CommunityMyFeed /></ProtectedRoute>} />
               <Route path="/community/members/:userId" element={<ProtectedRoute><CommunityMemberProfile /></ProtectedRoute>} />
               <Route path="/community/ranking" element={<ProtectedRoute><CommunityRanking /></ProtectedRoute>} />
               <Route path="/community/posts/:postId" element={<ProtectedRoute><CommunityPostDetail /></ProtectedRoute>} />
               <Route path="/student/tracks" element={<Navigate to="/dashboard/courses?tab=tracks" replace />} />
-              <Route path="/student/notes" element={<ProtectedRoute><StudentNotes /></ProtectedRoute>} />
-              <Route path="/student/micro-learning" element={<ProtectedRoute><StudentMicroLearning /></ProtectedRoute>} />
-              <Route path="/student/self-learning" element={<ProtectedRoute><SelfLearning /></ProtectedRoute>} />
-              <Route path="/student/qualifications" element={<ProtectedRoute><StudentQualifications /></ProtectedRoute>} />
+              <Route path="/student/notes" element={<StudentRoute><StudentNotes /></StudentRoute>} />
+              <Route path="/student/micro-learning" element={<StudentRoute><StudentMicroLearning /></StudentRoute>} />
+              <Route path="/student/self-learning" element={<StudentRoute><SelfLearning /></StudentRoute>} />
+              <Route path="/student/qualifications" element={<StudentRoute><StudentQualifications /></StudentRoute>} />
               <Route path="/articles" element={<ProtectedRoute><StudentArticles /></ProtectedRoute>} />
               <Route path="/articles/:id" element={<ProtectedRoute><StudentArticleDetail /></ProtectedRoute>} />
-              <Route path="/student/programs" element={<ProtectedRoute><StudentPrograms /></ProtectedRoute>} />
-              <Route path="/student/certificates" element={<ProtectedRoute><FeatureGate module="certificates_ops"><StudentCertificates /></FeatureGate></ProtectedRoute>} />
-              <Route path="/student/evidence" element={<ProtectedRoute><FeatureGate module="evidence"><StudentEvidence /></FeatureGate></ProtectedRoute>} />
-              <Route path="/student/surveys" element={<ProtectedRoute><FeatureGate module="surveys_ops"><StudentSurveys /></FeatureGate></ProtectedRoute>} />
+              <Route path="/student/programs" element={<StudentRoute><StudentPrograms /></StudentRoute>} />
+              <Route path="/student/certificates" element={<StudentRoute><FeatureGate module="certificates_ops"><StudentCertificates /></FeatureGate></StudentRoute>} />
+              <Route path="/student/evidence" element={<StudentRoute><FeatureGate module="evidence"><StudentEvidence /></FeatureGate></StudentRoute>} />
+              <Route path="/student/surveys" element={<StudentRoute><FeatureGate module="surveys_ops"><StudentSurveys /></FeatureGate></StudentRoute>} />
               <Route path="/verify/cert/:code" element={<VerifyCertificate />} />
               <Route path="/p/:slug" element={<StaticPage />} />
 
@@ -277,8 +278,8 @@ const App = () => (
               <Route path="/tools/english-correction" element={<ProtectedRoute><EnglishCorrection /></ProtectedRoute>} />
 
               {/* Corrections (essay correction system) */}
-              <Route path="/student/corrections" element={<ProtectedRoute><StudentCorrections /></ProtectedRoute>} />
-              <Route path="/student/corrections/:id" element={<ProtectedRoute><CorrectionDetail /></ProtectedRoute>} />
+              <Route path="/student/corrections" element={<StudentRoute><StudentCorrections /></StudentRoute>} />
+              <Route path="/student/corrections/:id" element={<StudentRoute><CorrectionDetail /></StudentRoute>} />
               <Route path="/teacher/corrections" element={<TeacherRoute><CorrectionsQueue role="teacher" /></TeacherRoute>} />
               <Route path="/teacher/corrections/:id" element={<TeacherRoute><CorrectionDetail /></TeacherRoute>} />
               <Route path="/admin/corrections" element={<AdminRoute><CorrectionsQueue role="admin" /></AdminRoute>} />
@@ -376,7 +377,7 @@ const App = () => (
               {/* Video Sessions */}
               <Route path="/admin/video-sessions" element={<AdminRoute><VideoSessionsManage role="admin" /></AdminRoute>} />
               <Route path="/teacher/video-sessions" element={<TeacherRoute><VideoSessionsManage role="teacher" /></TeacherRoute>} />
-              <Route path="/student/video-sessions" element={<ProtectedRoute><VideoSessionsStudent /></ProtectedRoute>} />
+              <Route path="/student/video-sessions" element={<StudentRoute><VideoSessionsStudent /></StudentRoute>} />
               <Route path="/video-room/:sessionId" element={<ProtectedRoute><VideoRoom /></ProtectedRoute>} />
 
               {/* Branch Admin (지점 중간관리자) */}
@@ -393,13 +394,13 @@ const App = () => (
               {/* Course Detail & Content Player (role-based) */}
               <Route path="/admin/courses/:courseId" element={<AdminRoute><CourseDetail /></AdminRoute>} />
               <Route path="/teacher/courses/:courseId" element={<TeacherRoute><CourseDetail /></TeacherRoute>} />
-              <Route path="/student/courses/:courseId" element={<ProtectedRoute><CourseDetail /></ProtectedRoute>} />
+              <Route path="/student/courses/:courseId" element={<StudentRoute><CourseDetail /></StudentRoute>} />
               <Route path="/admin/courses/:courseId/content/:contentId" element={<AdminRoute><ContentPlayer /></AdminRoute>} />
               <Route path="/teacher/courses/:courseId/content/:contentId" element={<TeacherRoute><ContentPlayer /></TeacherRoute>} />
-              <Route path="/student/courses/:courseId/content/:contentId" element={<ProtectedRoute><ContentPlayer /></ProtectedRoute>} />
+              <Route path="/student/courses/:courseId/content/:contentId" element={<StudentRoute><ContentPlayer /></StudentRoute>} />
               <Route path="/admin/courses/:courseId/assessment/:assessmentId" element={<AdminRoute><AssessmentPage /></AdminRoute>} />
               <Route path="/teacher/courses/:courseId/assessment/:assessmentId" element={<TeacherRoute><AssessmentPage /></TeacherRoute>} />
-              <Route path="/student/courses/:courseId/assessment/:assessmentId" element={<ProtectedRoute><AssessmentPage /></ProtectedRoute>} />
+              <Route path="/student/courses/:courseId/assessment/:assessmentId" element={<StudentRoute><AssessmentPage /></StudentRoute>} />
 
               {/* Legacy generic routes */}
               <Route path="/courses/:courseId" element={<ProtectedRoute><CourseRedirect /></ProtectedRoute>} />

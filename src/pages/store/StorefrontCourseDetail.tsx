@@ -39,7 +39,7 @@ const StorefrontCourseDetail = () => {
         .from("courses")
         .select("*, categories(name)")
         .eq("id", id!)
-        .single();
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -54,7 +54,7 @@ const StorefrontCourseDetail = () => {
         .from("profiles")
         .select("full_name, avatar_url, position, department")
         .eq("user_id", course!.instructor_id!)
-        .single();
+        .maybeSingle();
       return data;
     },
     enabled: !!course?.instructor_id,

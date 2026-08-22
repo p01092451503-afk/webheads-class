@@ -37,7 +37,7 @@ const TeacherStudentDetail = () => {
         .from("profiles")
         .select("*")
         .eq("user_id", studentId!)
-        .single();
+        .maybeSingle();
       if (error) throw error;
       return data;
     },

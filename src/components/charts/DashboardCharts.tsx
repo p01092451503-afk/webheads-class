@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LabelList,
@@ -32,17 +33,12 @@ const tooltipItemStyle = {
 
 /** Premium tooltip used by donut/pie charts. Shows a color swatch, name,
  * value and percentage of total in a compact, polished card. */
-const DonutTooltipContent = ({
-  active,
-  payload,
-  total,
-  unit = "",
-}: {
+const DonutTooltipContent = forwardRef<HTMLDivElement, {
   active?: boolean;
   payload?: any[];
   total: number;
   unit?: string;
-}) => {
+}>(({ active, payload, total, unit = "" }, ref) => {
   if (!active || !payload?.length) return null;
   const item = payload[0];
   const value = Number(item.value) || 0;
@@ -50,6 +46,7 @@ const DonutTooltipContent = ({
   const color = item.payload?.color || item.color || "hsl(var(--primary))";
   return (
     <div
+      ref={ref}
       style={tooltipStyle}
       className="min-w-[140px]"
     >
@@ -73,7 +70,8 @@ const DonutTooltipContent = ({
       </div>
     </div>
   );
-};
+});
+DonutTooltipContent.displayName = "DonutTooltipContent";
 
 /* ──────────────── Sparkline (KPI 카드 내부) ──────────────── */
 export const Sparkline = ({

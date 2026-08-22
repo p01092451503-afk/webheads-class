@@ -3,6 +3,7 @@
 // - 채널: email(Resend) / sms · alimtalk(Solapi) / system(앱 알림)
 // - 재발송 방지(cooldown_days), 발송 이력(message_logs) 기록
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+import { verifyCronRequest } from "../_shared/cronAuth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -43,6 +44,14 @@ async function solapiHeaders(apiKey: string, apiSecret: string) {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  const auth = await verifyCronRequest(req);
+  if (!auth.ok) {
+    return new Response(JSON.stringify({ error: auth.error }), {
+      status: auth.status,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
 
   try {
     const admin = createClient(

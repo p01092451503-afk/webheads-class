@@ -65,7 +65,7 @@ const CorrectionDetail = () => {
           "id, topic, note, status, score, summary, next_recommendation, student_id, course_id, assigned_teacher_id, submitted_at, completed_at",
         )
         .eq("id", id)
-        .single();
+        .maybeSingle();
       if (error) throw error;
       let course: { id: string; title: string } | null = null;
       if (req?.course_id) {
