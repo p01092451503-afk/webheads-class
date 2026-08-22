@@ -1,10 +1,11 @@
+import { forwardRef } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 interface Props {
   data: { date: string; amount: number }[];
 }
 
-const B2cRevenueChart = ({ data }: Props) => (
+const B2cRevenueChart = forwardRef<HTMLDivElement, Props>(({ data }, _ref) => (
   <ResponsiveContainer width="100%" height="100%">
     <LineChart data={data}>
       <XAxis dataKey="date" tick={{ fontSize: 10 }} interval={6} stroke="hsl(var(--muted-foreground))" />
@@ -16,6 +17,7 @@ const B2cRevenueChart = ({ data }: Props) => (
       <Line type="monotone" dataKey="amount" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
     </LineChart>
   </ResponsiveContainer>
-);
+));
+B2cRevenueChart.displayName = "B2cRevenueChart";
 
 export default B2cRevenueChart;
