@@ -377,19 +377,8 @@ const MyPage = ({ defaultTab = "profile" }: { defaultTab?: string }) => {
                 <h2 className="text-xl font-bold text-foreground">{profile?.full_name || t("common.user")}</h2>
                 <p className="text-sm text-muted-foreground truncate">{user?.email}</p>
                 <div className="flex items-center gap-2 flex-wrap">
-                  {(() => {
-                    const branch = branches.find((b: any) => b.id === ((profile as any)?.department_id));
-                    const fallbackName = branch?.name
-                      || (typeof profile?.department === "string" ? profile.department : null);
-                    const branchName = (profile as any)?.department_id
-                      ? localizeById((profile as any)?.department_id, fallbackName) || fallbackName
-                      : localizeByName(fallbackName);
-                    return branchName ? (
-                      <span className="text-[11px] bg-secondary text-muted-foreground px-2 py-0.5 rounded-md">{branchName}</span>
-                    ) : null;
-                  })()}
-                  {profile?.position && <span className="text-[11px] bg-secondary text-muted-foreground px-2 py-0.5 rounded-md">{positionLabel || profile.position}</span>}
-                  {profile?.team_name && <span className="text-[11px] bg-secondary text-muted-foreground px-2 py-0.5 rounded-md">{teamLabel || localizeByName(profile.team_name)}</span>}
+                </div>
+
                 </div>
               </div>
             </div>
