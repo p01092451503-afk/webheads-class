@@ -18,6 +18,7 @@ let buffer: Array<{
 }> = [];
 
 let flushTimer: ReturnType<typeof setTimeout> | null = null;
+let accessToken: string | null = null;
 
 const FLUSH_INTERVAL = 10_000; // 10 seconds
 
@@ -32,30 +33,40 @@ const flushBuffer = async () => {
   }
 };
 
-// Flush on page unload using sendBeacon as last resort
+/**
+ * Unload flush. `navigator.sendBeacon` cannot set an Authorization header,
+ * so the anon-key request was rejected by RLS (authenticated-only insert).
+ * `fetch(..., { keepalive: true })` survives unload AND carries the user's
+ * access token, so the rows actually land.
+ */
+const flushOnUnload = () => {
+  if (buffer.length === 0 || !accessToken) return;
+  const batch = [...buffer];
+  buffer = [];
+  try {
+    fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/traffic_logs`, {
+      method: "POST",
+      keepalive: true,
+      headers: {
+        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify(batch),
+    }).catch(() => {});
+  } catch {
+    // silently fail
+  }
+};
+
 if (typeof window !== "undefined") {
-  window.addEventListener("beforeunload", () => {
-    if (buffer.length === 0) return;
-    const batch = [...buffer];
-    buffer = [];
-    // Use sendBeacon for reliability during unload
-    const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/traffic_logs`;
-    const headers = {
-      apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      "Content-Type": "application/json",
-      Prefer: "return=minimal",
-    };
-    try {
-      navigator.sendBeacon(
-        url,
-        new Blob([JSON.stringify(batch)], { type: "application/json" })
-      );
-    } catch {
-      // silently fail
-    }
+  window.addEventListener("pagehide", flushOnUnload);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") flushOnUnload();
   });
 }
+
 
 export const useTrafficLogger = () => {
   const { user, profile } = useUser();
